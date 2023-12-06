@@ -24,8 +24,8 @@ function App() {
       </div>
       <h1>Olymp'IF</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button >
+          Explorer les éditions précédentes
         </button>
         <p>
           Vous êtes prêts à découvrir l'historique des JO ?
