@@ -28,13 +28,13 @@ function App() {
           count is {count}
         </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          Vous êtes prêts à découvrir l'historique des JO ?
         </p>
       </div>
-      <p className="read-the-docs">
+      <p className="read-the-docs">    
         Click on the Olympic and Paralympic logos to learn more
       </p>
-    </>
+    </>   
   );
 }
 
