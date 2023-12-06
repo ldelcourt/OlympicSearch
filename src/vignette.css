@@ -1,0 +1,34 @@
+/* Vignette.css */
+
+.vignette-container {
+    display: flex;
+    background-color: #f0f0f0; /* Fond blanc légèrement grisé/bleuté */
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px; /* Coins arrondis pour l'effet en relief */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre sous la vignette */
+    width: 300px; /* Ajustez la largeur de la vignette selon vos besoins */
+    aspect-ratio: 3/1; /* Rapport hauteur/largeur, ajustez selon vos besoins */
+  }
+  
+  .vignette-image {
+    width: 100px; /* Ajustez la taille de l'image selon vos besoins */
+    height: auto;
+    margin-right: 10px;
+  }
+  
+  .vignette-text {
+    flex: 1;
+  }
+  
+  .vignette-title {
+    font-weight: bold;
+    color: black; /* Définissez la couleur du texte en noir */
+    margin-bottom: 5px;
+  }
+  
+  .vignette-type {
+    color: black; /* Définissez la couleur du texte en noir */
+    margin-top: 5px;
+  }
+  
