@@ -1,10 +1,10 @@
 import './sport.css';
 
 interface SportProps {
-    sportName: string;
-    olympicAppearance: string;
-    sportImageSource: string;
-    sportDescription: string;
+    sportName?: string;
+    olympicAppearance?: string;
+    sportImageSource?: string;
+    sportDescription?: string;
   }
 
 function Sport({
