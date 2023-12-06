@@ -1,0 +1,36 @@
+.sport-container {
+  border: 1px solid gray;
+  border-radius: 5px;
+  margin: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  background-color: white;
+}
+
+.info-container {
+  display: flex;
+  align-items: center;
+  width: 70%; /* Ajustez la largeur en fonction de vos besoins */
+}
+
+.info-text {
+  color: black;
+}
+
+.sport-image {
+  width: 100px;
+  height: 100px;
+  margin-left: 20px;
+}
+
+.description-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid gray;
+  border-radius: 5px;
+  margin-top: 20px;
+  padding: 20px;
+  width: 90%;
+  background-color: white;
+}

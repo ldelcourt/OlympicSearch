@@ -1,4 +1,5 @@
 import './home.css';
+import {Link} from 'react-router-dom';
 
 function Home() {
 
@@ -28,6 +29,12 @@ function Home() {
         <p>
           Vous êtes prêts à découvrir l'historique des JO ?
         </p>
+
+        <Link to="/sport">
+          <button>
+            Page sport
+          </button>
+        </Link>
       </div>
       <p className="read-the-docs">    
         Click on the Olympic and Paralympic logos to learn more
