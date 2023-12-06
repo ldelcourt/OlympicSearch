@@ -10,7 +10,7 @@ function App() {
         <a href="https://olympics.com/en/" target="_blank">
           <img
             src="https://www.mpa-pro.fr/resize/650x450/zc/2/f/0/src/sites/mpapro/files/products/d12592.png"
-            className="logo"
+            className="logo react"
             alt="Olympic Games logo"
           />
         </a>
