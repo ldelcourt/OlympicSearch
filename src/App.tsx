@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import Component from './component';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -7,6 +8,7 @@ function App() {
   return (
     <>
       <div>
+        <Component/>
         <a href="https://olympics.com/en/" target="_blank">
           <img
             src="https://www.mpa-pro.fr/resize/650x450/zc/2/f/0/src/sites/mpapro/files/products/d12592.png"
