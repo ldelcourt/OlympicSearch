@@ -11,6 +11,8 @@ function Search() {
   };
   const handleClick = (event) => {
    alert(texteSaisie);
+   
+   
     
 
   };
