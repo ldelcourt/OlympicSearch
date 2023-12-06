@@ -51,6 +51,7 @@ function Home() {
         Clique sur les logos des Jeux Olympiques et Paralympiques pour en apprendre plus
       </p>
       <Search></Search>
+      <Search></Search>
     </>   
   );
 }
