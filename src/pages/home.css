@@ -11,15 +11,20 @@
 }
 
 
-
+.logojo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 100%;
+  width: 30%;
+  padding-top: 10%;
+  padding-bottom: 10%;
+  filter: drop-shadow(0 0 2em #646cffaa);
 
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
+
 
 
 @keyframes logo-spinneg {
