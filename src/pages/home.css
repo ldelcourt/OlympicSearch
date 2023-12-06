@@ -1,15 +1,3 @@
-#root {
-  width: 100%;
-  margin:0;
-  padding: 2rem;
-  text-align: center;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh; /* Set the height to take up the full viewport height */
-  
-}
-
 
 .logojo{
   display: flex;
