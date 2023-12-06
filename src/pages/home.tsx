@@ -1,9 +1,12 @@
+import Search from '../Component/Search';
+import Header from '../Component/Header';
 import './home.css';
 
 function Home() {
 
   return (
     <>
+    <Header></Header>
       <div>
         <a href="https://olympics.com/en/" target="_blank">
           <img
@@ -32,6 +35,7 @@ function Home() {
       <p className="read-the-docs">    
         Click on the Olympic and Paralympic logos to learn more
       </p>
+      <Search></Search>
     </>   
   );
 }
