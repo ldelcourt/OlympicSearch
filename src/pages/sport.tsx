@@ -6,20 +6,22 @@ interface SportProps {
   olympicAppearance: string;
 }
 
-function Sport({ sportName, olympicAppearance }: SportProps) {
+function Sport() {
   return (
+    <>
     <div className="sport-container">
-      <div className="info-container">
-        <div className="info-text">
-          <h2>Discipline : {sportName}</h2>
-          <h2>Apparition aux JO : {olympicAppearance}</h2>
+      <div className='ligne-haut'>
+        <div className="info-container">
+          <p>Discipline : </p>
+          <p>Apparition aux JO : </p>
         </div>
-        <img className="sport-image" src="../images/logoJO.png" alt="JO Logo" />
-      </div>
+        <img className="sport-image" src="https://svgsilh.com/svg_v2/40795.svg" alt="JO Logo" />
+      </div>     
       <div className="description-container">
         <p>Description : </p>
       </div>
     </div>
+    </>
   );
 }
 
