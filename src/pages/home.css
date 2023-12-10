@@ -1,6 +1,6 @@
 #root {
   width: 100%;
-  margin:100px;
+  margin:0;
   padding: 2rem;
   text-align: center;
   background-size: contain;
@@ -18,9 +18,9 @@
 }
 .logo {
   height: 100%;
-  width: 30%;
-  padding-top: 10%;
-  padding-bottom: 10%;
+  width: 20%;
+  padding-top: 3%;
+  padding-bottom: 3%;
   filter: drop-shadow(0 0 2em #646cffaa);
 
 }
@@ -55,7 +55,7 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 1em;
 }
 
 .read-the-docs {

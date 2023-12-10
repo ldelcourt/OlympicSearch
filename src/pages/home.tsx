@@ -1,8 +1,13 @@
 import Search from '../Component/Search';
 import Header from '../Component/Header';
+import React, { useEffect } from 'react';
 import './home.css';
 
 function Home() {
+
+  useEffect(() => {
+    document.title = "Olymp'IF - Accueil";
+  }, []);
 
   return (
     <>
@@ -15,6 +20,7 @@ function Home() {
             alt="Olympic Games logo"
           />
         </a>
+        <h1>Olymp'IF</h1>
         <a href="https://www.paralympic.org/" target="_blank">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/IPC_logo_%282019%29.svg/800px-IPC_logo_%282019%29.svg.png"
@@ -23,17 +29,26 @@ function Home() {
           />
         </a>
       </div>
-      <h1>Olymp'IF</h1>
+      <p> </p>
       <div className="card">
-        <button >
-          Explorer les éditions précédentes
-        </button>
         <p>
-          Vous êtes prêts à découvrir l'historique des JO ?
+          Vous êtes prêts à tout savoir sur les JO ?
         </p>
+        <button >
+          Test page athlete
+        </button>
+        <button >
+          Test page sport
+        </button>
+        <button >
+          Test page edition
+        </button>
+        <button >
+          Test page pays
+        </button>
       </div>
       <p className="read-the-docs">    
-        Click on the Olympic and Paralympic logos to learn more
+        Clique sur les logos des Jeux Olympiques et Paralympiques pour en apprendre plus
       </p>
       <Search></Search>
     </>   
