@@ -1,6 +1,6 @@
 import Search from '../Component/Search';
 import Header from '../Component/Header';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import './home.css';
 
 function Home() {

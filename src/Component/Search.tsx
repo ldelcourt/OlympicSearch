@@ -4,17 +4,16 @@ import './Search.css';
 function Search() {
   const [texteSaisie, setTexteSaisie] = useState('');
     
-  const handleChange = (event) => {
+  const handleChange = (event:any) => {
     setTexteSaisie(event.target.value);
     
 
   };
-  const handleClick = (event) => {
+  const handleClick = (event:any) => {
    alert(texteSaisie);
    
    
-    
-
+  
   };
     
     return (

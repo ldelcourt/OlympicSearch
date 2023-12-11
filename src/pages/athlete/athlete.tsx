@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useState } from "react";
 import { useEffect } from "react";
 
 
