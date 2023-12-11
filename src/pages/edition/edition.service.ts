@@ -15,52 +15,47 @@ export const fetchEditionData = async (
 ): Promise<EditionData | undefined> => {
   const base_endpoint = "https://query.wikidata.org/sparql";
   const edition_query = `
-    ?olympicGame p:P393 ?e.
-    ?e ps:P393 ?editionNumber.
-    ?olympicGame rdfs:label ?edition.
+    wd:${edition} rdfs:label ?edition.
     FILTER(lang(?edition) = 'fr').
-    FILTER(?editionNumber = "${edition}").
     `;
   const logo_query = `
-    ?olympicGame p:P154 ?logo.
+    wd:${edition} p:P154 ?logo.
     ?logo ps:P154 ?logoUrl.
     `;
 
   const location_query = `
-    ?olympicGame p:P276 ?l.
+    wd:${edition} p:P276 ?l.
     ?l ps:P276 ?locationPage.
     ?locationPage rdfs:label ?location.
     FILTER(lang(?location) = 'fr').
     `;
 
   const counts_query = `
-    ?olympicGame p:P1132 ?n.
+    wd:${edition} p:P1132 ?n.
     ?n ps:P1132 ?count.
     BIND(xsd:integer(?count) AS ?countValue).
     `;
 
   const country_query = `
-    ?olympicGame p:P17 ?c.
+    wd:${edition} p:P17 ?c.
     ?c ps:P17 ?countryPage.
     ?countryPage rdfs:label ?country.
     FILTER(lang(?country) = 'fr').
     `;
 
   const start_time_query = `
-    ?olympicGame p:P580 ?st.
+    wd:${edition} p:P580 ?st.
     ?st ps:P580 ?start_time.
     `;
 
   const end_time_query = `
-    ?olympicGame p:P582 ?et.
+    wd:${edition} p:P582 ?et.
     ?et ps:P582 ?end_time.
     `;
 
   const query = `
     SELECT ?edition ?location ?country ?logoUrl ?countValue ?start_time ?end_time
     WHERE {
-      wd:Q159821 p:P527 ?og.
-      ?og ps:P527 ?olympicGame.
       ${edition_query}
       OPTIONAL{
         ${location_query}
@@ -76,9 +71,9 @@ export const fetchEditionData = async (
     SELECT *
     WHERE {
       wd:Q159821 p:P527 ?og.
-      ?og ps:P527 ?olympicGame.
+      ?og ps:P527 wd:${edition}.
       ${edition_query}
-      ?olympicGame p:P527 ?s.
+      wd:${edition} p:P527 ?s.
       ?s ps:P527 ?sports.
     }
     `;
@@ -142,21 +137,11 @@ export const fetchEditionData = async (
 
 export const fetchSports = async (edition?: string): Promise<string[]> => {
   const base_endpoint = "https://query.wikidata.org/sparql";
-  const edition_query = `
-    ?olympicGame p:P393 ?e.
-    ?e ps:P393 ?editionNumber.
-    ?olympicGame rdfs:label ?edition.
-    FILTER(lang(?edition) = 'fr').
-    FILTER(?editionNumber = "${edition}").
-    `;
 
   const query = `
     SELECT ?sport_label
     WHERE {
-      wd:Q159821 p:P527 ?og.
-      ?og ps:P527 ?olympicGame.
-      ${edition_query}
-      ?olympicGame p:P527 ?sp.
+      wd:${edition} p:P527 ?sp.
       ?sp ps:P527 ?sports_page.
       ?sports_page p:P641 ?s.
       ?s ps:P641 ?sport.
