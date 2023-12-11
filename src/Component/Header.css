@@ -1,4 +1,8 @@
 
+@font-face {
+    font-family: 'Jockey One';
+    src: url('../../JockeyOne-Regular.ttf') format('truetype');
+}
 
 header {
     background-color: #0936b3;
@@ -8,20 +12,35 @@ header {
 }
 
 header img {
-    width: 100px; /* Ajustez la largeur du logo selon vos besoins */
+    width: 130px;
     height: auto;
-    float: left; /* Aligne le logo à gauche */
-    
-    margin: 7px;
-    margin-right:-50%;
-    
-    
+    float: left;
+    margin: 0px;
+    margin-right: -50%;
+    margin-left: 20px;
+    margin-top: 6px;
+    transition: transform 0.3s ease; /* Add transition property for smooth transform */
+}
 
+header img:hover {
+    transform: scale(1.1);
 }
 
 header h1 {
     margin: 0;
     line-height: 70px; /* Ajustez la hauteur de ligne pour centrer le titre verticalement */
     text-align: left;
-    margin-left: 150px;
+    margin-left: 180px;
+    font-family: Jockey One;
+    font-size: 45px;
+    transition: color 0.3s ease; /* Add transition property for smooth color change */
 }
+
+header h1:hover {
+    color: #bb9001; /* Change the color on hover */
+    cursor: default;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); /* Add text shadow on hover */
+}
+    
+
+
