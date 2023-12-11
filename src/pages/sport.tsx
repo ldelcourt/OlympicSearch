@@ -13,7 +13,7 @@ function Sport() {
       <div className='ligne-haut'>
         <div className="info-container">
           <p>Discipline : </p>
-          <p>Apparition aux JO : </p>
+          <p><br/>Apparition aux JO : </p>
         </div>
         <img className="sport-image" src="https://svgsilh.com/svg_v2/40795.svg" alt="JO Logo" />
       </div>     
