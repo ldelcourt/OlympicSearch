@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { EditionData, fetchEditionData, fetchSports } from "./edition.service";
 import { useParams } from "react-router-dom";
 import "./edition.css";
+import "../../index.css"
 const Edition = () => {
   const params = useParams();
   const [data, setData] = useState<EditionData>();
   const [sports, setSports] = useState<string[]>([]);
-
+  const [loading, setLoading] = useState<boolean>(false);
   const handleFetchEditionData = async () => {
     const res = await fetchEditionData(params.edition);
     if (res) {
@@ -16,16 +17,27 @@ const Edition = () => {
 
   const handleFetchSports = async () => {
     const res = await fetchSports(params.edition);
-    if(res){
+    if (res) {
       setSports(res);
     }
+  };
 
-    console.log(res);
-  }
-  useEffect(() => {
+  const loadData = async () => {
+    setLoading(true);
     handleFetchEditionData();
     handleFetchSports();
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
+
+  if (loading) {
+    return <div className="loader"></div>;
+  }
 
   if (!data) {
     return <div>Not found</div>;
@@ -58,10 +70,11 @@ const Edition = () => {
         <img src={data?.logo_url} />
       </div>
       <div className="edition-sports">
+        <h2>Liste des sports</h2>
         <ul>
-          {sports.map((sport:string,index: number) =>(
+          {sports.map((sport: string, index: number) => (
             <li key={index}>
-              {sport}
+              {sport} <span> - </span>
             </li>
           ))}
         </ul>

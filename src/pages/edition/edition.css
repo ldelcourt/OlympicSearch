@@ -40,7 +40,7 @@
     display: flex;
     justify-content: center;
     gap: 40px;
-    width: 50vw;
+    width: 100vw;
     margin: auto;
     
 }
@@ -58,11 +58,16 @@
     justify-content: center;
     flex-direction: column;
     gap: 8px;
-    padding: 16px  16px;
+    padding: 16px  16px;    
     border-radius: 8px;
     height: fit-content;
-    width: 50vw;
+    width: calc(55vw - 16px);
     margin: auto;
+}
+
+.edition-sports h2{
+    font-size: 20px;
+    margin: 0;
 }
 
 .edition-sports ul{
@@ -70,10 +75,15 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 4px;
     padding: 0;
 }
 
 .edition-sports li{
     font-size: 18px;
+    letter-spacing: 0.05rem;
+}
+
+.edition-sports li:last-child span{
+    display: none;
 }
