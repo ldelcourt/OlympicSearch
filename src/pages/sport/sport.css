@@ -1,0 +1,103 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
+}
+
+.blue-header {
+    box-sizing: border-box;
+    /* Include padding and border in element's total width */
+    background-color: rgb(4, 4, 155);
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Olympic_rings_without_rims.svg/513px-Olympic_rings_without_rims.svg.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: auto 70px;
+    /* Largeur automatique et hauteur de 75px */
+    background-position-x: 10px;
+    /* Positionnement à 10px depuis la gauche */
+    padding: 10px;
+    color: white;
+    font-style: italic;
+    font-size: 60px;
+    height: 100px;
+    padding-left: 200px;
+    /* Adjust the value as needed */
+}
+
+
+h1 {
+    margin: 0;
+}
+
+
+
+.container {
+    display: flex;
+    /* Use flexbox */
+    align-items: center;
+    justify-content: left;
+    margin-left: 70px;
+    margin-top: 40px;
+
+}
+
+.p {
+    box-sizing: border-box;
+    /* Include padding and border in element's total width */
+    background: #F5F5F5;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);    width: 900px;
+    /* Adjust the value as needed */
+    font-size: 25px;
+    padding: 10px;
+    /* Add these properties to vertically center the text */
+    /*display: flex;*/
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    /* Or any height you want */
+}
+
+.image img {
+    height: 200px;
+    width: auto;
+    margin-left: 80px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.image img:hover {
+    transform: scale(1.1);
+}
+
+.description {
+    box-sizing: border-box;
+    /* Include padding and border in element's total width */
+    background: #F5F5F5;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);    width: 900px;
+    width: 80%;
+    /* Adjust the value as needed */
+    margin: 70px;
+    /* Add margin all around */
+    font-size: 25px;
+    padding: 10px;
+
+}
+
+.medaille{
+    height: 40px;
+    width: auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    position: relative;
+    transform: translateY(8px);
+}
+
+.flag{
+    height: 30px;
+    width: auto;
+    margin-left: 10px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.25);
+    margin-right: 10px;
+    position: relative;
+    transform: translateY(8px);
+}
