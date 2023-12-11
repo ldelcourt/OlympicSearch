@@ -1,16 +1,9 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh; /* Set the height to take up the full viewport height */
+
+.logojo{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-
-
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -19,6 +12,7 @@
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
+
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
@@ -33,28 +27,8 @@
   }
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(1) .logo {
-    animation: logo-spinneg infinite 1s linear;
-  }
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 1s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.home-container{
+  display: flex;
+  justify-content: column;
+  margin: 20px 0;
 }

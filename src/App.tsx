@@ -3,6 +3,10 @@ import { useState } from 'react';
 import Home from "./pages/home";
 import Vignette from "./vignette";
 import TableauVignettes from './tableauVignette'; // Assurez-vous que le chemin du fichier est correct
+import Athlete from "./pages/athlete/athlete";
+
+import Edition from "./pages/edition/edition";
+import Header from "./Component/Header";
 
 function App() {
   const [vignettesData, setVignettesData] = useState([
@@ -18,10 +22,13 @@ function App() {
 
   return (
     <BrowserRouter>
+    <Header/>
       <Routes>
         <Route path="/" element={<Home />} /> 
         <Route path="/test-vignette" element={<TestVignette />} />
         <Route path="/tableau-vignettes" element={<TableauVignettes vignettesData={vignettesData} />} />
+        <Route path="/edition/:edition" element={<Edition/>}></Route>
+        <Route path="/athlete/:name" Component={Athlete} />
       </Routes>
     </BrowserRouter>
   );

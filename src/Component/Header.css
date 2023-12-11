@@ -1,0 +1,27 @@
+
+
+header {
+    background-color: #0936b3;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+header img {
+    width: 100px; /* Ajustez la largeur du logo selon vos besoins */
+    height: auto;
+    float: left; /* Aligne le logo à gauche */
+    
+    margin: 7px;
+    margin-right:-50%;
+    
+    
+
+}
+
+header h1 {
+    margin: 0;
+    line-height: 70px; /* Ajustez la hauteur de ligne pour centrer le titre verticalement */
+    text-align: left;
+    margin-left: 150px;
+}
