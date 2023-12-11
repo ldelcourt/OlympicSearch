@@ -40,7 +40,6 @@ async function getPageTitle(url: string): Promise<string> {
     }
 }
 
-
 function Athlete() {
     const { name } = useParams<{ name?: string }>();
     const [data, setData] = useState<any>();
@@ -101,7 +100,6 @@ function Athlete() {
 
     return (
         <div>
-            <h1 className="blue-header">Olymp'IF</h1>
             <div className="container">
                 <h1 className="p">
                     Nom : {formattedName}

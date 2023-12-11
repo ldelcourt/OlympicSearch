@@ -3,11 +3,13 @@ import Home from "./pages/home";
 import Athlete from "./pages/athlete/athlete";
 
 import Edition from "./pages/edition/edition";
+import Header from "./Component/Header";
 
 
 function App() {
   return (
     <BrowserRouter>
+    <Header/>
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/edition/:edition" element={<Edition/>}></Route>

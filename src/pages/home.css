@@ -27,28 +27,8 @@
   }
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(1) .logo {
-    animation: logo-spinneg infinite 1s linear;
-  }
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 1s linear;
-  }
-}
-
-.card {
-  padding: 1em;
-}
-
-.read-the-docs {
-  color: #888;
+.home-container{
+  display: flex;
+  justify-content: column;
+  margin: 20px 0;
 }
