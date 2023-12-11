@@ -48,6 +48,5 @@ body {
     height: 20px;
     display: block;
     margin: auto;
-    filter: invert(1); /* Inverser la couleur de l'icône pour qu'elle soit blanche */
   }
   
