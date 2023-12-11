@@ -1,0 +1,27 @@
+.tableau-vignettes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px; /* Ajustez cette valeur pour changer l'espace entre les vignettes */
+  }
+  
+  .vignette-container {
+    flex-basis: calc(50% - 10px); /* Ajustez la valeur de 10px en fonction de l'espace que vous voulez entre les vignettes */
+    box-sizing: border-box; /* Assurez-vous que la largeur inclut le padding et la bordure */
+  }
+  
+  .filter-option {
+    display: inline-block;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Ajoute une transition en douceur à l'arrière-plan */
+  }
+  
+  .filter-option:hover {
+    background-color: #eee; /* Change la couleur de fond lors du survol */
+  }
+  
+  .filter-option-selected {
+    background-color: #ddd;
+  }
