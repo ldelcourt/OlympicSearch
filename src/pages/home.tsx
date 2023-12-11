@@ -37,7 +37,7 @@ function Home() {
         <button >
           Test page athlete
         </button>
-        <Link to="/sport">Test page sport</Link>
+        <Link to="/Sport/sport">Test page sport</Link>
         <button >
           Test page edition
         </button>

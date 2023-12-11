@@ -1,5 +1,5 @@
 import React from 'react';
-import './Sport.css';
+import './sport.css';
 
 interface SportProps {
   sportName: string;
