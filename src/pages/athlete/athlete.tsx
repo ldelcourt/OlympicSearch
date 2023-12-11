@@ -25,23 +25,6 @@ const formatNomPrenom = (nomPrenom: string): string => {
 };
 
 
-async function getPageTitle(url: string): Promise<string> {
-    try {
-        const response = await fetch(url);
-        const html = await response.text();
-        const match = html.match(/<title>(.*?)<\/title>/i);
-        if (match && match[1]) {
-            return match[1];
-        } else {
-            return "Title not found";
-        }
-    } catch (error) {
-        console.error("Error fetching page:", error);
-        return "Error fetching page";
-    }
-}
-
-
 function Athlete() {
     const { name } = useParams<{ name?: string }>();
     const [data, setData] = useState<any>();
@@ -50,19 +33,22 @@ function Athlete() {
     const fetchData = async () => {
         const base_endpoint = "https://query.wikidata.org/sparql";
         const query = `
-        SELECT ?birthdate ?name ?nat ?gender ?birthplace ?birthplaceLabel ?image ?competitions ?competitionsLabel 
-        ?medals ?medalsLabel ?medalImage ?ranking ?sport ?sportLabel 
+        SELECT ?birthdate ?name ?nat ?gender ?birthplace ?birthplaceLabel ?image ?competitions ?competitionsLabel ?birthCountry ?birthCountryLabel
+        ?medals ?medalsLabel ?medalImage ?ranking ?sport ?sportLabel ?birthCountryImage ?description
         WHERE {
             ?person wdt:P31 wd:Q5;
-                rdfs:label "${formattedName}"@fr.
+                rdfs:label "${formattedName}"@en.
             OPTIONAL { ?person wdt:P569 ?birthdate. }
             OPTIONAL { ?person wdt:P21 ?gender. }
             OPTIONAL { ?person wdt:P19 ?birthplace. }
             OPTIONAL { ?person wdt:P641 ?sport. }
             OPTIONAL { ?person p:P1344 ?participation. }
+            OPTIONAL { ?birthplace wdt:P17 ?birthCountry. }
+            OPTional { ?birthCountry wdt:P41 ?birthCountryImage. }
             OPTIONAL { ?participation ps:P1344 ?competitions. }
             OPTIONAL { ?participation pq:P166 ?medals. }
             OPTIONAL { ?participation pq:P1352 ?ranking. }
+            OPTIONAL { ?person schema:description ?description. FILTER(LANG(?description) = "fr") }
             SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
             OPTIONAL { ?person wdt:P18 ?image. }
         }
@@ -86,6 +72,7 @@ function Athlete() {
         } catch (error) {
             console.error("Erreur réseau :", error);
         }
+
     };
 
     useEffect(() => {
@@ -107,12 +94,13 @@ function Athlete() {
                 <h1 className="p">
                     Nom : {formattedName}
                     <br />
-                    Date de naissance : {data?.results?.bindings[0]?.birthdate?.value && formatDate(data?.results?.bindings[0]?.birthdate?.value)}
+                    Date de naissance : {data?.results?.bindings[0]?.birthdate?.value && formatDate(data?.results?.bindings[0]?.birthdate?.value)} (Âge : {data?.results?.bindings[0]?.birthdate?.value && Math.floor((new Date().getTime() - new Date(data?.results?.bindings[0]?.birthdate?.value).getTime()) / (1000 * 3600 * 24 * 365.25))} ans)
                     <br />
                     Sexe : {data?.results?.bindings[0]?.gender?.value === "http://www.wikidata.org/entity/Q6581097" ? "Homme" : "Femme"}
                     <br />
-                    Lieu de naissance : {data?.results?.bindings[0]?.birthplaceLabel?.value}
+                    Lieu de naissance : {data?.results?.bindings[0]?.birthplaceLabel?.value} ({data?.results?.bindings[0]?.birthCountryLabel?.value}) {data?.results?.bindings[0]?.birthCountryImage?.value && <img className="flag" src={data?.results?.bindings[0]?.birthCountryImage?.value} />}
                     <br />
+                    Description : {data?.results?.bindings[0]?.description?.value}
                     <br />
                     Disciplines : {data?.results?.bindings[0]?.sportLabel?.value}                    
                 </h1>
@@ -140,6 +128,8 @@ function Athlete() {
                     return null;
                 })}
             </h3>
+            {data?.results?.bindings.length === 0 && <h4>Erreur : Aucune donnée trouvée</h4>}
+
 
         </div>
     );
