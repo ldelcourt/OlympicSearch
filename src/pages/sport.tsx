@@ -1,5 +1,6 @@
 import React from 'react';
 import './Sport.css';
+import Header from '../Component/Header';
 
 interface SportProps {
   sportName: string;
@@ -9,13 +10,13 @@ interface SportProps {
 function Sport() {
   return (
     <>
-    <div className="sport-container">
+    <div className="container-sport">
       <div className='ligne-haut'>
         <div className="info-container">
           <p>Discipline : </p>
           <p><br/>Apparition aux JO : </p>
         </div>
-        <img className="sport-image" src="https://svgsilh.com/svg_v2/40795.svg" alt="JO Logo" />
+        <img className="image" src="https://svgsilh.com/svg_v2/40795.svg" alt="JO Logo" />
       </div>     
       <div className="description-container">
         <p>Description : </p>

@@ -1,10 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Hide horizontal scrollbar */
+}
+
+h1 {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
 .sport-container {
   width: 1000px; 
   height: 800px; 
   border: 1px solid gray;
   margin: 20px;
-  padding: 20px;
   background-color: white;
+}
+.container {
+  display: flex;
+  /* Use flexbox */
+  align-items: center;
+  justify-content: center;
+  margin-right: 30px;
 }
 
 .ligne-haut{
@@ -17,15 +38,14 @@
   border: 1px solid gray;
   border-radius: 5px;
   color: black;
-  display: flex;
+  
   width: 70%; 
 }
 
-.sport-image {
-  display: flex;
-  width: 100px;
-  height: 100px;
-  margin-left: 20px;
+.image{
+  height: 200px;
+  width: auto;
+  margin-left: 30px;
 }
 
 .description-container {
