@@ -6,8 +6,8 @@ export type EditionData = {
   participants_count: number;
   nations_count: number;
   sports_count: number;
-  // start_date: Date;
-  // end_date: Date;
+  start_date: string;
+  end_date: string;
 };
 
 export const fetchEditionData = async (
@@ -48,12 +48,16 @@ export const fetchEditionData = async (
 
     const start_time_query = `
     ?olympicGame p:P580 ?st.
-    ?st ps:P580 ?start_time_page.
-    ?start_time_page rdfs:label ?start_time.
-    FITLER(lang(?start_time) = 'fr').`
+    ?st ps:P580 ?start_time.
+    `
+
+    const end_time_query = `
+    ?olympicGame p:P582 ?et.
+    ?et ps:P582 ?end_time.
+    `
 
   const query = `
-    SELECT ?edition ?location ?country ?logoUrl ?countValue
+    SELECT ?edition ?location ?country ?logoUrl ?countValue ?start_time ?end_time
     WHERE {
       wd:Q159821 p:P527 ?og.
       ?og ps:P527 ?olympicGame.
@@ -63,6 +67,7 @@ export const fetchEditionData = async (
       ${counts_query}
       ${logo_query}
       ${start_time_query}
+      ${end_time_query}
     }`;
 
     const sports_query = `
@@ -84,6 +89,7 @@ export const fetchEditionData = async (
       }
     );
 
+
     const sports_response = await fetch(
       `${base_endpoint}?query=${encodeURIComponent(sports_query)}&format=json`,
       {
@@ -93,6 +99,7 @@ export const fetchEditionData = async (
 
     if (response.ok) {
       const res = await response.json();
+      console.log({res});
       if (res.results.bindings?.length) {
 
        let nations_count = +res.results.bindings[0].countValue.value;
@@ -119,7 +126,10 @@ export const fetchEditionData = async (
           country: data.country.value,
           participants_count,
           nations_count,
-          sports_count
+          sports_count,
+          start_date: parseDateToFrenchFormat(data.start_time.value),
+          end_date: parseDateToFrenchFormat(data.end_time.value) 
+          
         };
       }
     } else {
@@ -129,3 +139,19 @@ export const fetchEditionData = async (
     console.error("Erreur réseau :", error);
   }
 };
+
+export function parseDateToFrenchFormat(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+
+  // Convertir la chaîne de date en objet Date
+  const date = new Date(dateString);
+
+  // Formater la date en utilisant les options spécifiées
+  const formattedDate = date.toLocaleDateString('fr-FR', options);
+
+  return formattedDate;
+}
