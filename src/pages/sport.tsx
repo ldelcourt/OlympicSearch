@@ -1,6 +1,5 @@
 import React from 'react';
 import './Sport.css';
-import Header from '../Component/Header';
 
 interface SportProps {
   sportName: string;

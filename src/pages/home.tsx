@@ -12,7 +12,6 @@ function Home() {
 
   return (
     <>
-    <Header></Header>
       <div className='logojo'>
         <a href="https://olympics.com/en/" target="_blank">
           <img

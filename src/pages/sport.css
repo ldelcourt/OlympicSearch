@@ -1,9 +1,3 @@
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  /* Hide horizontal scrollbar */
-}
 
 h1 {
   margin: 0;
@@ -14,24 +8,16 @@ p {
 }
 
 .sport-container {
-  width: 1000px; 
-  height: 800px; 
+  
   border: 1px solid gray;
   margin: 20px;
   background-color: white;
-}
-.container {
-  display: flex;
-  /* Use flexbox */
-  align-items: center;
-  justify-content: center;
-  margin-right: 30px;
 }
 
 .ligne-haut{
   display: flex;
   justify-content: center;
-  align-items: center;
+  
 }
 
 .info-container {
@@ -40,6 +26,7 @@ p {
   color: black;
   
   width: 70%; 
+  align-items: left;
 }
 
 .image{
