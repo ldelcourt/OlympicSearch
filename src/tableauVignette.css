@@ -1,14 +1,24 @@
 .tableau-vignettes {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px; /* Ajustez cette valeur pour changer l'espace entre les vignettes */
-  }
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    width: 80%; /* Ajustez cette valeur pour changer la largeur du tableau */
+    margin: 0 auto; /* Centrer le tableau sur la page */
+}
   
   .vignette-container {
     flex-basis: calc(50% - 10px); /* Ajustez la valeur de 10px en fonction de l'espace que vous voulez entre les vignettes */
     box-sizing: border-box; /* Assurez-vous que la largeur inclut le padding et la bordure */
   }
   
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px 0; /* Ajoutez un peu d'espace au-dessus et en dessous des options de filtre */
+}
+
   .filter-option {
     display: inline-block;
     border: 1px solid #ccc;
@@ -24,4 +34,8 @@
   
   .filter-option-selected {
     background-color: #ddd;
+  }
+
+  .tableau-vignettes a{
+    text-decoration: none;
   }
