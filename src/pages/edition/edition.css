@@ -8,6 +8,7 @@
 .edition-container h1{
     font-size: 48px;
     text-align: center;
+    margin: 20px 0;
 }
 
 .edition-information {
@@ -27,6 +28,7 @@
     align-items: center;
     gap: 4px;
     font-size: 18px;
+    width: 25vw;
 }
 
 .edition-line h2{
@@ -37,12 +39,41 @@
 .edition-hero{
     display: flex;
     justify-content: center;
-    gap: 20px;
-    width: 100%;
+    gap: 40px;
+    width: 50vw;
+    margin: auto;
     
 }
 .edition-hero img{
     width: calc(211px * 1.8);
     height: 211px;
     padding: 0 12px;
+    margin: 0;
+}
+
+.edition-sports{
+    background-color: #F5F5F5;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px  16px;
+    border-radius: 8px;
+    height: fit-content;
+    width: 50vw;
+    margin: auto;
+}
+
+.edition-sports ul{
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+}
+
+.edition-sports li{
+    font-size: 18px;
 }
