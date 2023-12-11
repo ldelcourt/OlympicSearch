@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { EditionData, fetchEditionData } from "./edition.service";
+import { EditionData, fetchEditionData, fetchSports } from "./edition.service";
 import { useParams } from "react-router-dom";
 import "./edition.css";
 const Edition = () => {
   const params = useParams();
   const [data, setData] = useState<EditionData>();
+  const [sports, setSports] = useState<string[]>([]);
 
   const handleFetchEditionData = async () => {
     const res = await fetchEditionData(params.edition);
@@ -12,8 +13,18 @@ const Edition = () => {
       setData(res);
     }
   };
+
+  const handleFetchSports = async () => {
+    const res = await fetchSports(params.edition);
+    if(res){
+      setSports(res);
+    }
+
+    console.log(res);
+  }
   useEffect(() => {
     handleFetchEditionData();
+    handleFetchSports();
   }, []);
 
   if (!data) {
@@ -45,6 +56,15 @@ const Edition = () => {
         </div>
 
         <img src={data?.logo_url} />
+      </div>
+      <div className="edition-sports">
+        <ul>
+          {sports.map((sport:string,index: number) =>(
+            <li key={index}>
+              {sport}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
