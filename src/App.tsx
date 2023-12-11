@@ -22,7 +22,7 @@ function App() {
         <Route path="/edition/:edition" element={<Edition/>}></Route>
         <Route path="/athlete/:name" Component={Athlete} />
         <Route path="/sport/:name" Component={Sport} />
-        <Route path="/pays/:nomPays" Component={Pays} />
+        <Route path="/pays/:idPays" Component={Pays} />
       </Routes>
     </BrowserRouter>
   );
