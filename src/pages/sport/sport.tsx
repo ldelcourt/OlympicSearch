@@ -37,14 +37,15 @@ function Sport() {
     const fetchData = async () => {
         const base_endpoint = "https://query.wikidata.org/sparql";
         const query = `
-        SELECT ?name ?icon ?description
-        WHERE {
-            ?sport wdt:P31 wd:Q31629;
-                rdfs:label "${formattedName}"@en.
-            OPTIONAL { ?sport schema:description ?description. FILTER(LANG(?description) = "fr") }
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
-            OPTIONAL { ?sport wdt:P2910 ?icon. }
-        }
+        SELECT ?name ?icon ?description ?pays ?paysLabel
+            WHERE {
+                ?sport wdt:P31 wd:Q31629;
+                    rdfs:label "${formattedName}"@fr.
+                OPTIONAL { ?sport wdt:P495 ?pays. }
+                OPTIONAL { ?sport schema:description ?description. FILTER(LANG(?description) = "fr") }
+                SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
+                OPTIONAL { ?sport wdt:P2910 ?icon. }
+            }
         `;
 
 
@@ -86,7 +87,7 @@ function Sport() {
                 <h1 className="p">
                     Discipline : {formattedName}
                     <br />
-                    Apparition aux JO :              
+                    Pays d'origine : {data?.results?.bindings[0]?.paysLabel?.value}             
                 </h1>
 
                 <h2 className="image">
