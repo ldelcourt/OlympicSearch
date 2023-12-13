@@ -1,0 +1,48 @@
+.edition-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.edition-container h1{
+    font-size: 48px;
+    text-align: center;
+}
+
+.edition-information {
+    background-color: #F5F5F5;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px  16px;
+    border-radius: 8px;
+    height: fit-content 
+}
+
+.edition-line{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    font-size: 18px;
+}
+
+.edition-line h2{
+    font-size: 20px;
+    margin: 0;
+}
+
+.edition-hero{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    
+}
+.edition-hero img{
+    width: calc(211px * 1.8);
+    height: 211px;
+    padding: 0 12px;
+}

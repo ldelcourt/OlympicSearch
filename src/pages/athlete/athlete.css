@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
+}
+
+.blue-header {
+    box-sizing: border-box;
+    /* Include padding and border in element's total width */
+    background-color: rgb(4, 4, 155);
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Olympic_rings_without_rims.svg/513px-Olympic_rings_without_rims.svg.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: auto 70px;
+    /* Largeur automatique et hauteur de 75px */
+    background-position-x: 10px;
+    /* Positionnement à 10px depuis la gauche */
+    padding: 10px;
+    color: white;
+    font-style: italic;
+    font-size: 60px;
+    height: 100px;
+    padding-left: 200px;
+    /* Adjust the value as needed */
+}
+
+
+h1 {
+    margin: 0;
+}
+
+
+
+.container {
+    display: flex;
+    /* Use flexbox */
+    align-items: center;
+    justify-content: center;
+    margin-right: 30px;
+}
+
+.p {
+    box-sizing: border-box;
+    /* Include padding and border in element's total width */
+    background-color: white;
+    box-shadow: 2px 2px 5px rgb(6, 0, 0);
+    width: 900px;
+    /* Adjust the value as needed */
+    font-size: 25px;
+    margin: 30px;
+    padding: 10px;
+    /* Add these properties to vertically center the text */
+    /*display: flex;*/
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    /* Or any height you want */
+}
+
+.image img {
+    height: 200px;
+    width: auto;
+    margin-left: 30px;
+}
+
+.compet {
+    box-sizing: border-box;
+    /* Include padding and border in element's total width */
+    background-color: white;
+    box-shadow: 2px 2px 5px rgb(6, 0, 0);
+    width: 80%;
+    /* Adjust the value as needed */
+    margin: 40px;
+    /* Add margin all around */
+    font-size: 25px;
+    padding: 10px;
+
+}
+
+.medaille{
+    height: 40px;
+    width: auto;
+    margin-left: 10px;
+    margin-right: 10px;
+    position: relative;
+    transform: translateY(8px);
+}
