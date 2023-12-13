@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Route, Routes} from "react-router-dom";
 import { useState } from 'react';
 import Home from "./pages/home";
@@ -5,6 +6,8 @@ import Vignette from "./vignette";
 import TableauVignettes from './tableauVignette'; // Assurez-vous que le chemin du fichier est correct
 import Athlete from "./pages/athlete/athlete";
 import Sport from "./pages/sport/sport";
+import Pays from "./pages/pays/pays";
+
 import Edition from "./pages/edition/edition";
 import Header from "./Component/Header";
 
@@ -18,8 +21,9 @@ function App() {
         <Route path="/test-vignette" element={<TestVignette />} />
         <Route path="/tableau-vignettes" element={<TableauVignettes/>} />
         <Route path="/edition/:edition" element={<Edition/>}></Route>
-        <Route path="/athlete/:name" Component={Athlete} />
+        <Route path="/athlete/:idParam" Component={Athlete} />
         <Route path="/sport/:name" Component={Sport} />
+        <Route path="/pays/:idPays" Component={Pays} />
       </Routes>
     </BrowserRouter>
   );
