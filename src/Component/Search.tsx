@@ -87,15 +87,17 @@ console.log(result?.results?.bindings[0]?.nameLabel.value);
 //si on trouve rien, on essaie une requete sur le sport
     if(result?.results?.bindings[0]?.nameLabel.value == undefined){
       const query = `
-      SELECT ?name ?sport ?image ?description
-      WHERE {
-        ?sport wdt:P31 wd:Q31629;   # Type de sport : tennis
-        rdfs:label "${texteSaisie}"@fr.
-        OPTIONAL { ?sport schema:description ?description. FILTER(LANG(?description) = "fr") }
-        ?sport rdfs:label ?name. FILTER(LANG(?name) = "fr")
-        OPTIONAL { ?sport wdt:P18 ?image. }
-        
-      }
+      SELECT ?name ?sport ?sportLabel ?image ?description
+WHERE {
+  ?sport wdt:P31 wd:Q31629;   # Type de sport : tennis
+  rdfs:label ?sportLabel.
+  FILTER(LANG(?sportLabel) = "fr" && CONTAINS(?sportLabel, "${texteSaisie}" ))
+
+  OPTIONAL { ?sport schema:description ?description. FILTER(LANG(?description) = "fr") }
+  ?sport rdfs:label ?name. FILTER(LANG(?name) = "fr")
+  OPTIONAL { ?sport wdt:P18 ?image. }
+}
+
     `;
     try {
       const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
@@ -117,11 +119,13 @@ console.log(result?.results?.bindings[0]?.nameLabel.value);
 
 
     }
-    if(result?.results?.bindings[0]?.nameLabel.value == undefined){
+    //personne athlète
+    /*if(result?.results?.bindings[0]?.nameLabel.value == undefined){
       const query = `
       SELECT ?person ?personLabel ?image ?nature_de_l_élément ?nature_de_l_élémentLabel WHERE {
         ?person wdt:P31 wd:Q5;
-          rdfs:label "${texteSaisie}"@fr.
+        rdfs:label ?personLabel.
+        FILTER(LANG(?personLabel) = "fr" && CONTAINS(?personLabel, "${texteSaisie}" ))
         SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
         OPTIONAL { ?person wdt:P18 ?image. }
         OPTIONAL { ?person wdt:P31 ?nature_de_l_élément. }
@@ -150,7 +154,7 @@ console.log(result?.results?.bindings[0]?.nameLabel.value);
 
 
     console.log(result?.results?.bindings[0]?.paysLabel.value);
-
+*/
 
     //pays
     if(result?.results?.bindings[0]?.nameLabel.value == undefined){
@@ -159,7 +163,8 @@ console.log(result?.results?.bindings[0]?.nameLabel.value);
 WHERE {
   ?pays wdt:P31 wd:Q6256;  # Q6256 représente l'élément pour les pays, ajustez-le si nécessaire
         wdt:P1344 ?jeuxOlympiques;  # P1344 indique la participation aux Jeux Olympiques
-        rdfs:label "${texteSaisie}"@fr.
+        rdfs:label ?paysLabel.
+        FILTER(LANG(?paysLabel) = "fr" && CONTAINS(?paysLabel, "${texteSaisie}" ))
 
   OPTIONAL { ?pays wdt:P36 ?capitale. }  # P36 indique la capitale
   OPTIONAL { ?pays wdt:P1082 ?population. }  # P1082 indique la population
