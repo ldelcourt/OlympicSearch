@@ -209,6 +209,7 @@ const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
   return (
     <>
     <div className="global">
+      <br />
       <div className="search-container">
         <input
           type="text"
