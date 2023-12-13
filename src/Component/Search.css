@@ -20,6 +20,9 @@
     margin: 15px auto; /* Utilisez auto pour centrer horizontalement */
     justify-content: center;
   }
+  .global{
+    
+  }
   
   #search {
     padding: 10px;
