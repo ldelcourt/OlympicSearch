@@ -18,7 +18,7 @@ function App() {
         <Route path="/test-vignette" element={<TestVignette />} />
         <Route path="/tableau-vignettes" element={<TableauVignettes/>} />
         <Route path="/edition/:edition" element={<Edition/>}></Route>
-        <Route path="/athlete/:name" Component={Athlete} />
+        <Route path="/athlete/:idParam" Component={Athlete} />
         <Route path="/sport/:name" Component={Sport} />
       </Routes>
     </BrowserRouter>
