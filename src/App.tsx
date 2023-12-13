@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Route, Routes} from "react-router-dom";
 import { useState } from 'react';
 import Home from "./pages/home";
@@ -20,7 +21,7 @@ function App() {
         <Route path="/test-vignette" element={<TestVignette />} />
         <Route path="/tableau-vignettes" element={<TableauVignettes/>} />
         <Route path="/edition/:edition" element={<Edition/>}></Route>
-        <Route path="/athlete/:name" Component={Athlete} />
+        <Route path="/athlete/:idParam" Component={Athlete} />
         <Route path="/sport/:name" Component={Sport} />
         <Route path="/pays/:idPays" Component={Pays} />
       </Routes>
