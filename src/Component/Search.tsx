@@ -42,19 +42,23 @@ function Search() {
 
     //test requete édition
     const query = `
-    SELECT ?name_edition ?nomLabel ?image ?nature_de_l_élément ?nature_de_l_élémentLabel WHERE {
-      ?name_edition wdt:P31 wd:Q159821.
-      rdfs:label "${texteSaisie}"@fr.
-      OPTIONAL { ?name_edition wdt:P17 ?pays. }
+    SELECT ?name_edition ?nomLabel ?image ?paysLabel ?nature_de_l_élémentLabel
+    WHERE {
+      ?name_edition wdt:P31 wd:Q159821;
+                   rdfs:label ?nomLabel.
+    
+      FILTER(LANG(?nomLabel) = "fr" && CONTAINS(?nomLabel, "${texteSaisie}" )).
+    
+      OPTIONAL { ?name_edition wdt:P17 ?pays;}
+      OPTIONAL { ?name_edition wdt:P18 ?image. }
+      OPTIONAL { ?name_edition wdt:P31 ?nature_de_l_élément.}
+    
       SERVICE wikibase:label {
         bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
-        ?name_edition rdfs:label ?nomLabel.
       }
-    
-      OPTIONAL { ?name_edition wdt:P18 ?image. }
-    
-      OPTIONAL { ?name_edition wdt:P31 ?nature_de_l_élément. }
     }
+    
+
     `;
    
 
@@ -122,6 +126,49 @@ console.log(result?.results?.bindings[0]?.nameLabel.value);
         OPTIONAL { ?person wdt:P18 ?image. }
         OPTIONAL { ?person wdt:P31 ?nature_de_l_élément. }
       }
+    `;
+    try {
+      const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
+          method: "GET",
+      });
+
+      if (response.ok) {
+          result = await response.json();
+          setJsonTexte(JSON.stringify(result));
+          
+          console.log({ result });
+          setTexteSaisie(result);
+      } else {
+          console.error("Erreur lors de la requête SPARQL");
+      }
+  } catch (error) {
+      console.error("Erreur réseau :", error);
+  }
+
+
+    }
+
+
+    console.log(result?.results?.bindings[0]?.paysLabel.value);
+
+
+    //pays
+    if(result?.results?.bindings[0]?.nameLabel.value == undefined){
+      const query = `
+      SELECT distinct ?pays ?paysLabel ?capitaleLabel
+WHERE {
+  ?pays wdt:P31 wd:Q6256;  # Q6256 représente l'élément pour les pays, ajustez-le si nécessaire
+        wdt:P1344 ?jeuxOlympiques;  # P1344 indique la participation aux Jeux Olympiques
+        rdfs:label "${texteSaisie}"@fr.
+
+  OPTIONAL { ?pays wdt:P36 ?capitale. }  # P36 indique la capitale
+  OPTIONAL { ?pays wdt:P1082 ?population. }  # P1082 indique la population
+  OPTIONAL { ?pays wdt:P2046 ?superficie. }  # P2046 indique la superficie
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
+  }
+}      
     `;
     try {
       const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
