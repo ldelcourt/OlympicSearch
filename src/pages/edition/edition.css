@@ -28,7 +28,7 @@
     align-items: center;
     gap: 4px;
     font-size: 18px;
-    width: 25vw;
+    width: fit-content;
 }
 
 .edition-line h2{
@@ -86,4 +86,75 @@
 
 .edition-sports li:last-child span{
     display: none;
+}
+
+.edition-ranking{
+    background-color: #FFF;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px  16px;    
+    border-radius: 8px;
+    height: fit-content;
+    width: calc(211px * 1.8 + 432px);
+    margin: auto;
+}
+
+
+.gold-medal a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin: auto;
+    border-radius: 100%;  
+    padding: 4px;
+    background-color: #FCC861;
+}
+
+.silver-medal a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin: auto;
+    border-radius: 100%;  
+    padding: 4px;
+    background-color: #E5E5E5;
+}
+
+.bronze-medal a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin: auto;
+    border-radius: 100%;  
+    padding: 4px;
+    background-color: #DCB386;
+}
+
+.edition-links{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+}
+
+.edition-links a{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: black;
+    transition: all 0.25s ease;
+}
+
+.edition-links a:hover{
+    transform: scale(1.1);
 }

@@ -1,5 +1,4 @@
 import Search from '../Component/Search';
-import Header from '../Component/Header';
 import { useEffect } from 'react';
 import './home.css';
 
