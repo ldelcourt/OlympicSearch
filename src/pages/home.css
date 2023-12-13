@@ -1,19 +1,20 @@
-
-.logojo{
+.logojo {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
-
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -27,8 +28,9 @@
   }
 }
 
-.home-container{
+.home-container {
   display: flex;
-  justify-content: column;
+  flex-direction: column;
   margin: 20px 0;
 }
+

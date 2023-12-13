@@ -19,6 +19,20 @@ function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
   params.append('title', title);
   params.append('type', type);
 
+  const getLinkBasedOnType = (): string => {
+    // Ajoutez des conditions pour déterminer le lien en fonction du type
+    if (type === 'Athlète') {
+      return `/athlete/${id}`;
+    } else if (type === 'Pays') {
+      return `/pays/${id}`;
+    } else if (type === 'Edition') {
+      // Lien par défaut si le type n'est pas géré
+      return `/edition/${id}`;
+    } else {
+      return `/?${params.toString()}`
+    }
+  };
+
   const handleMouseEnter = () => {
     const timerId = setTimeout(() => setShowDescription(true), 500);
     setTimer(timerId);
@@ -40,7 +54,7 @@ function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
   }, [timer]);
 
   return (
-    <Link to={`/?${params.toString()}`} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
+    <Link to={getLinkBasedOnType()} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>
       <div className="vignette-container">
         <img src={imageSrc} alt={title} className="vignette-image" />
         <div className="vignette-text">

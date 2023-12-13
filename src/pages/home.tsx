@@ -2,6 +2,7 @@ import Search from '../Component/Search';
 import Header from '../Component/Header';
 import { useEffect } from 'react';
 import './home.css';
+import TableauVignettes from '../tableauVignette';
 
 function Home() {
 
@@ -11,8 +12,11 @@ function Home() {
 
   return (
     <div className='home-container'>
-      <Search></Search>
-    </div>   
+      <div>
+        <Search />
+      </div>
+      <TableauVignettes />
+    </div> 
   );
 }
 
