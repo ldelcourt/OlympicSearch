@@ -19,6 +19,7 @@ const Edition = () => {
   const [ranking, setRanking] = useState<Ranking[]>([]);
   const [sports, setSports] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentFilter, setCurrentFilter] = useState<string>("total");
   const handleFetchEditionData = async () => {
     const res = await fetchEditionData(params.edition);
     if (res) {
@@ -59,9 +60,38 @@ const Edition = () => {
     handleFetchSports();
     handleFetchEditionLinks();
     handleFetchRanking();
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setLoading(false);
+  };
+
+  const handleSort = (column: string) => {
+    let sortRanking;
+    if (column === "total") {
+      sortRanking = ranking.sort((a: Ranking, b: Ranking) => {
+        const totalA = a.gold + a.silver + a.bronze;
+        const totalB = b.gold + b.silver + b.bronze;
+        return currentFilter === 'total' ? totalA - totalB : totalB - totalA ;
+      });
+    } else {
+      if (typeof ranking[0][column] === "number") {
+        sortRanking = ranking.sort((a, b) => currentFilter == column ? a[column] - b[column] : b[column] - a[column]);
+      } else {
+        sortRanking = ranking.sort((a, b) => {
+          const valueA = a[column].toLowerCase();
+          const valueB = b[column].toLowerCase();
+          if (valueA > valueB) {
+            return currentFilter === "country" ? -1 : 1;
+          }
+          if (valueA < valueB) {
+            return currentFilter === "country" ? 1 : -1;
+          }
+          return 0;
+        });
+      }
+    }
+    setCurrentFilter(currentFilter === column ? `-${column}` : column);
+    setRanking([...sortRanking]);
   };
 
   useEffect(() => {
@@ -72,7 +102,7 @@ const Edition = () => {
     return <div className="loader"></div>;
   }
 
-  if (!data) {
+  if (!data?.edition) {
     return <div>Not found</div>;
   }
   return (
@@ -112,36 +142,124 @@ const Edition = () => {
         </ul>
       </div>
       <div className="edition-ranking">
-        <table>
-          <thead>
-            <tr>
-              <th style={{ width: "40%", textAlign: "left" }}>Nation</th>
-              <th style={{ width: "15%" }}>Or</th>
-              <th style={{ width: "15%" }}>Argent</th>
-              <th style={{ width: "15%" }}>Bronze</th>
-              <th style={{ width: "15%" }}>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ranking.map((nation: Ranking, index: number) => (
-              <tr className="ranking-row" key={index}>
-                <td style={{ width: "40%" }}>{nation.country}</td>
-                <td className="gold-medal">
-                  <a>{nation.gold ?? 0}</a>
-                </td>
-                <td className="silver-medal">
-                  <a>{nation.silver ?? 0}</a>
-                </td>
-                <td className="bronze-medal">
-                  <a>{nation.bronze ?? 0}</a>
-                </td>
-                <td style={{ width: "15%", textAlign: "center" }}>
-                  {nation?.bronze + nation?.silver + nation?.gold ?? 0}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div>
+          <div className="ranking-head">
+            <div className="nation-head">
+              Nation{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="#000000"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                onClick={() => handleSort("country")}
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M3 9l4 -4l4 4m-4 -4v14" />
+                <path d="M21 15l-4 4l-4 -4m4 4v-14" />
+              </svg>
+            </div>
+            <div className="medal-head">
+              Or{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="#000000"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                onClick={() => handleSort("gold")}
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M3 9l4 -4l4 4m-4 -4v14" />
+                <path d="M21 15l-4 4l-4 -4m4 4v-14" />
+              </svg>
+            </div>
+            <div className="medal-head">
+              Argent{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="#000000"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                onClick={() => handleSort("silver")}
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M3 9l4 -4l4 4m-4 -4v14" />
+                <path d="M21 15l-4 4l-4 -4m4 4v-14" />
+              </svg>
+            </div>
+            <div className="medal-head">
+              Bronze{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="#000000"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                onClick={() => handleSort("bronze")}
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M3 9l4 -4l4 4m-4 -4v14" />
+                <path d="M21 15l-4 4l-4 -4m4 4v-14" />
+              </svg>{" "}
+            </div>
+            <div className="medal-head">
+              Total
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="#000000"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                onClick={() => handleSort("total")}
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M3 9l4 -4l4 4m-4 -4v14" />
+                <path d="M21 15l-4 4l-4 -4m4 4v-14" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div>
+          {ranking.map((nation: Ranking, index: number) => (
+            <div className="ranking-row" key={index}>
+              <div className="nation-cell">{nation.country}</div>
+              <div className="gold-medal">
+                <a>{nation.gold ?? 0}</a>
+              </div>
+              <div className="silver-medal">
+                <a>{nation.silver ?? 0}</a>
+              </div>
+              <div className="bronze-medal">
+                <a>{nation.bronze ?? 0}</a>
+              </div>
+              <div className="total-medal">
+                {nation?.bronze + nation?.silver + nation?.gold ?? 0}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <div className="edition-links">
         <Link to={`../edition/${editionLinks?.previous}`}>

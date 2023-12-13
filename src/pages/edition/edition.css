@@ -103,6 +103,56 @@
 }
 
 
+.ranking-row{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+.ranking-head{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    font-weight: 700;
+    font-size: 18px;
+}
+.nation-head{
+    width: 314px;
+    display: flex;
+    align-items: center;
+}
+
+.medal-head{
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.25s ease;
+}
+
+.medal-head:hover{
+    transform: scale(1.05);
+}
+
+.nation-cell{
+    width: 314px!important;
+}
+.gold-medal{
+    width: 120px;
+}
+.silver-medal{
+    width: 120px;
+}
+.bronze-medal{
+    width: 120px;
+}
+
+.total-medal{
+    width: 120px;
+    display: flex;
+    justify-content: center;
+}
 .gold-medal a{
     display: flex;
     justify-content: center;
