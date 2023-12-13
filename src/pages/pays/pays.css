@@ -1,7 +1,8 @@
 table {
-  width: 100%;
+  width: 90%;
   border-collapse: collapse;
   margin-top: 20px;
+  
 }
 
 
@@ -14,16 +15,30 @@ td {
   padding: 1px 8px;
 }
 
+.table-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .countryInfo {
   display: flex;
   align-items: center;
+  justify-content:center;
+  width: 100wv;
 }
 
 .flag {
-  width: 100px;
+  width: 400px;
   height: auto; 
 }
 
+.flag-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .medal {
   width: 20px;
   height: auto;
@@ -50,4 +65,40 @@ tr:hover {
 
 .hoverable {
   cursor: pointer; /* Set the cursor style to pointer on hover */
+}
+
+.edition-sports{
+  background-color: #FFF;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px  16px;    
+  border-radius: 8px;
+  height: fit-content;
+  width: calc(211px * 1.8 + 432px);
+}
+
+.edition-sports h2{
+  font-size: 20px;
+  margin: 0;
+}
+
+.edition-sports ul{
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0;
+}
+
+.edition-sports li{
+  font-size: 18px;
+  letter-spacing: 0.05rem;
+}
+
+.edition-sports li:last-child span{
+  display: none;
 }
