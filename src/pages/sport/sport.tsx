@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
+import Search from '../../Component/Search';
 
 
 import { useParams } from "react-router-dom";
@@ -49,8 +50,6 @@ function Sport() {
         `;
 
 
-
-
         try {
             const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
                 method: "GET",
@@ -83,11 +82,14 @@ function Sport() {
 
     return (
         <div>
+            <Search></Search>
             <div className="container">
                 <h1 className="p">
-                    Discipline : {formattedName}
+                    <strong>Discipline :</strong> {formattedName}
                     <br />
-                    Pays d'origine : {data?.results?.bindings[0]?.paysLabel?.value}             
+                    <strong>Pays d'origine :</strong> {data?.results?.bindings[0]?.paysLabel?.value}     
+                    <br />
+                    <strong>Description :</strong> {data?.results?.bindings[0]?.description?.value}        
                 </h1>
 
                 <h2 className="image">
@@ -95,12 +97,10 @@ function Sport() {
                 </h2>
 
             </div>
-            <h3 className="description">
-                Description : {data?.results?.bindings[0]?.description?.value}
-            </h3>
-            {data?.results?.bindings.length === 0 && <h4>Erreur : Aucune donnée trouvée</h4>}
-
-
+            <br />
+            <div style={{ textAlign: 'center' }}>
+                {data?.results?.bindings.length === 0 ? <p>Aucune donnée trouvée</p> : <p>Sources : Wikidata </p>}
+            </div>
         </div>
     );
 }
