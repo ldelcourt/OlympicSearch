@@ -29,7 +29,9 @@
     margin-top: 0;
     font-size: 17px;
     max-height: 40px; /* Ajustez cette valeur en fonction de vos besoins */
-    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+    font-size: 15px; /* Réduisez la taille de la police si nécessaire */
+    line-height: 1.2; /* Ajustez la hauteur de ligne si nécessaire */
+    /*white-space: nowrap; /* Empêche le texte de passer à la ligne */
     overflow: hidden; /* Cache le texte qui déborde */
     text-overflow: ellipsis; /* Ajoute des points de suspension à la fin du texte débordant */
     max-width: 100%; /* Limite la largeur à 100% de la largeur de la vignette */
