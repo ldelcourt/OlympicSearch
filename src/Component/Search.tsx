@@ -1,7 +1,11 @@
 import { ChangeEvent, useState } from "react";
 import "./Search.css";
+import Vignette, { VignetteProps } from "../vignette";
 import { useEffect } from "react";
 import { json, useParams } from "react-router-dom";
+import { FecthResult, SearchQueryResult, SearchType } from "../interfaces";
+
+
 
 const formatInput = (input: string): string => {
   // Divisez la chaîne en utilisant "_" comme séparateur
@@ -22,182 +26,131 @@ const formatInput = (input: string): string => {
 };
 
 function Search() {
-  var result =JSON.stringify({ });
-  const [texteSaisie, setTexteSaisie] = useState<any>();
-  const [jsonText, setJsonTexte] =useState<any>();
+  //var result =JSON.stringify({ });
+  const [texteSaisie, setTexteSaisie] = useState<string>();
+
+  //Tableau pour stocker les resultats de la query
+  const [queryResult, setQueryResult] =useState<VignetteProps[]>([]);
   const { name } = useParams<{ name?: string }>();
   // const formattedInput = formatInput(name || '');
 
+   /** Requete Wikimedia
+     * Les Requetes doivent rendre des attributs aux noms suivant
+     * @id Id vers la page
+     * @imageSrc Url vers l'image
+     * @title Titre de la vignette
+     * @type Type de la vignette passé en paramètre de fetchData
+     * @description Description de la vignette
+     * 
+     */
+   const editionQuery = `
+   SELECT DISTINCT ?id ?title ?image ?description
+   WHERE {
+     ?id wdt:P31 wd:Q159821;
+                  rdfs:label ?title;
+                   wdt:P17 ?country;
+                 schema:description ?description.
+     
+     
+   
+     FILTER((CONTAINS(?title, "${texteSaisie}" )) || (CONTAINS(?description, "${texteSaisie}"))).
+
+     FILTER(LANG(?title) = 'fr').
+     FILTER(LANG(?description) = 'fr').
+
+     OPTIONAL { ?id wdt:P17 ?pays;}
+     OPTIONAL { ?id wdt:P18 ?image1. }
+     OPTIONAL { ?id wdt:P154 ?image2. }
+
+ 
+     BIND(COALESCE(?image1, ?image2) AS ?image)
+   
+     SERVICE wikibase:label {
+       bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
+     }
+   }
+   `;
+
+   //Fonctionne bien
+   const sportQuery = `
+   SELECT ?title ?id ?imageSrc ?description
+   WHERE {
+     ?id wdt:P31 wd:Q31629;   # Type de sport : tennis
+            rdfs:label ?title;
+            p:P279 ?subclass_sport;
+            schema:description ?description.
+     ?subclass_sport ps:P279 wd:Q212434.
+     FILTER(CONTAINS(?title, "${texteSaisie}") || CONTAINS(?description, "${texteSaisie}")).       
+      FILTER(LANG(?title) = "fr" && lang(?description) = 'fr').
+     OPTIONAL { ?id wdt:P18 ?imageSrc. }   
+   }
+ `;
+  //Ne fonctionne pas
+  const athleteQuery = `
+      SELECT ?person ?personLabel ?image ?nature_de_l_élément ?nature_de_l_élémentLabel WHERE {
+        ?person wdt:P31 wd:Q5;
+          rdfs:label "${texteSaisie}"@fr.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
+        OPTIONAL { ?person wdt:P18 ?image. }
+        OPTIONAL { ?person wdt:P31 ?nature_de_l_élément. }
+      }
+    `;
+
+    const countryQuery = `
+    SELECT distinct ?id ?title ?description ?imageSrc
+    WHERE {
+        ?id wdt:P31 wd:Q6256;  # Q6256 représente l'élément pour les pays, ajustez-le si nécessaire
+        wdt:P1344 ?jeuxOlympiques;
+        schema:description ?description; # P1344 indique la participation aux Jeux Olympiques
+        rdfs:label ?title.
+        FILTER(
+          LANG(?title) = "fr" && 
+          CONTAINS(?title, "${texteSaisie}" )  
+        ).
+    OPTIONAL { ?id schema:description ?description }
+    OPTIONAL { ?id wdt:P41 ?imageSrc }
+    FILTER(lang(?description) = 'fr')
+
+    SERVICE wikibase:label {
+      bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
+      }
+    } 
+  `;
+
+
+  const handleClick = async () => {
+    await fetchData(editionQuery, 'edition');
+    await fetchData(sportQuery, 'sport');
+    await fetchData(countryQuery, 'pays');
+  };
+
+
   
-
-  const handleClick = (): void => {
-  fetchData();
-};
-
-
-  
-  const fetchData = async () => {
+  const fetchData = async (query: string, typeQuery: SearchType) => {
     const base_endpoint = "https://query.wikidata.org/sparql";
     
-
-    //test requete édition
-    const query = `
-    SELECT ?name_edition ?nomLabel ?image ?paysLabel ?nature_de_l_élémentLabel
-    WHERE {
-      ?name_edition wdt:P31 wd:Q159821;
-                   rdfs:label ?nomLabel.
-    
-      FILTER(LANG(?nomLabel) = "fr" && CONTAINS(?nomLabel, "${texteSaisie}" )).
-    
-      OPTIONAL { ?name_edition wdt:P17 ?pays;}
-      OPTIONAL { ?name_edition wdt:P18 ?image. }
-      OPTIONAL { ?name_edition wdt:P31 ?nature_de_l_élément.}
-    
-      SERVICE wikibase:label {
-        bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
-      }
-    }
-    
-
-    `;
-   
-
-
-
     try {
         const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
             method: "GET",
         });
 
         if (response.ok) {
-            result = await response.json();
-            setJsonTexte(JSON.stringify(result));
-            
+            const result:FecthResult = await response.json();
+            const temp: VignetteProps[] = result.results.bindings.map((row) => ({
+              description: row.description.value,
+              id: row.id.value, 
+              imageSrc: row.imageSrc?.value,
+              title: row.title.value,
+              type: typeQuery,
+            }));
+            setQueryResult((prevQueryResult) => [...prevQueryResult, ...temp]);          
             console.log({ result });
-            setTexteSaisie(result);
         } else {
             console.error("Erreur lors de la requête SPARQL");
         }
     } catch (error) {
         console.error("Erreur réseau :", error);
     }
-
-console.log(result?.results?.bindings[0]?.nameLabel.value);
-
-//si on trouve rien, on essaie une requete sur le sport
-    if(result?.results?.bindings[0]?.nameLabel.value == undefined){
-      const query = `
-      SELECT ?name ?sport ?sportLabel ?image ?description
-WHERE {
-  ?sport wdt:P31 wd:Q31629;   # Type de sport : tennis
-  rdfs:label ?sportLabel.
-  FILTER(LANG(?sportLabel) = "fr" && CONTAINS(?sportLabel, "${texteSaisie}" ))
-
-  OPTIONAL { ?sport schema:description ?description. FILTER(LANG(?description) = "fr") }
-  ?sport rdfs:label ?name. FILTER(LANG(?name) = "fr")
-  OPTIONAL { ?sport wdt:P18 ?image. }
-}
-
-    `;
-    try {
-      const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
-          method: "GET",
-      });
-
-      if (response.ok) {
-          result = await response.json();
-          setJsonTexte(JSON.stringify(result));
-          
-          console.log({ result });
-          setTexteSaisie(result);
-      } else {
-          console.error("Erreur lors de la requête SPARQL");
-      }
-  } catch (error) {
-      console.error("Erreur réseau :", error);
-  }
-
-
-    }
-    //personne athlète
-    /*if(result?.results?.bindings[0]?.nameLabel.value == undefined){
-      const query = `
-      SELECT ?person ?personLabel ?image ?nature_de_l_élément ?nature_de_l_élémentLabel WHERE {
-        ?person wdt:P31 wd:Q5;
-        rdfs:label ?personLabel.
-        FILTER(LANG(?personLabel) = "fr" && CONTAINS(?personLabel, "${texteSaisie}" ))
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
-        OPTIONAL { ?person wdt:P18 ?image. }
-        OPTIONAL { ?person wdt:P31 ?nature_de_l_élément. }
-      }
-    `;
-    try {
-      const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
-          method: "GET",
-      });
-
-      if (response.ok) {
-          result = await response.json();
-          setJsonTexte(JSON.stringify(result));
-          
-          console.log({ result });
-          setTexteSaisie(result);
-      } else {
-          console.error("Erreur lors de la requête SPARQL");
-      }
-  } catch (error) {
-      console.error("Erreur réseau :", error);
-  }
-
-
-    }
-
-
-    console.log(result?.results?.bindings[0]?.paysLabel.value);
-*/
-
-    //pays
-    if(result?.results?.bindings[0]?.nameLabel.value == undefined){
-      const query = `
-      SELECT distinct ?pays ?paysLabel ?capitaleLabel
-WHERE {
-  ?pays wdt:P31 wd:Q6256;  # Q6256 représente l'élément pour les pays, ajustez-le si nécessaire
-        wdt:P1344 ?jeuxOlympiques;  # P1344 indique la participation aux Jeux Olympiques
-        rdfs:label ?paysLabel.
-        FILTER(LANG(?paysLabel) = "fr" && CONTAINS(?paysLabel, "${texteSaisie}" ))
-
-  OPTIONAL { ?pays wdt:P36 ?capitale. }  # P36 indique la capitale
-  OPTIONAL { ?pays wdt:P1082 ?population. }  # P1082 indique la population
-  OPTIONAL { ?pays wdt:P2046 ?superficie. }  # P2046 indique la superficie
-
-  SERVICE wikibase:label {
-    bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
-  }
-}      
-    `;
-    try {
-      const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
-          method: "GET",
-      });
-
-      if (response.ok) {
-          result = await response.json();
-          setJsonTexte(JSON.stringify(result));
-          
-          console.log({ result });
-          setTexteSaisie(result);
-      } else {
-          console.error("Erreur lors de la requête SPARQL");
-      }
-  } catch (error) {
-      console.error("Erreur réseau :", error);
-  }
-
-
-    }
-
-
-    console.log(result?.results?.bindings[0]?.paysLabel.value);
 };
 
 
@@ -214,7 +167,6 @@ const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
   return (
     <>
     <div className="global">
-      <br />
       <div className="search-container">
         <input
           type="text"
@@ -230,13 +182,12 @@ const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
           ></img>
         </button>
       </div>
-      <div className="requetetext">
-        <p className= "requete"> {jsonText} </p>
-      </div>
-
 
     </div>
       
+      { queryResult.map((vignette, i) => (
+        <Vignette key={i} id={vignette.id} type={vignette.type} imageSrc={vignette.imageSrc} description={vignette.description} title={vignette.title} />
+      ))}
     </>
   );
 
