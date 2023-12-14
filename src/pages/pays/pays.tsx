@@ -1,4 +1,5 @@
 import './pays.css';
+import Search from '../../Component/Search';
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 
@@ -113,9 +114,9 @@ function Pays() {
   );
 
   const AthleteRow: React.FC<{data: QueryAthlete}> = ({ data }) => (
-    <div className='hoverable' onClick={() => naviguate(`/athlete/${data.sportif.value.substring(data.sportif.value.lastIndexOf('/') + 1)}`)}>
-      {data?.name?.value}, 
-    </div>
+    <li className='hoverable' onClick={() => naviguate(`/athlete/${data.sportif.value.substring(data.sportif.value.lastIndexOf('/') + 1)}`)}>
+      {data?.name?.value}<span> - </span>
+    </li>
   );
 
   useEffect(() => {
@@ -130,49 +131,55 @@ function Pays() {
 
   return (
     <>
+      <Search />
       <div className='countryInfo'>
           <div className='textCountry'>
-            <p>Pays : {countryData[0]?.name.value}</p>
-            <p>Nombre de participations aux JOs: {medalData?.length}</p>
-            <div style={{ display: 'flex', flexDirection: 'row'}}>Athlètes notables: 
-            {
-              athleteData.length > 0 ? (
-                athleteData?.map((athlete, index) => (
-                  <AthleteRow key={index} data={athlete} />
-                ))
-              ) : (
-                <div> Aucun</div>
-              )
-            }
+            <div className='edition-sports'><h2>Pays : </h2>{countryData[0]?.name.value}</div>
+            <div className='edition-sports'><h2>Nombre de participations aux JOs:</h2> {medalData?.length}</div>
+            <div className='edition-sports'>
+              <h2>Athlètes notables: </h2>
+              {
+                athleteData.length > 0 ? (
+                  <ul>
+                    {athleteData?.map((athlete, index) => (
+                      <AthleteRow key={index} data={athlete} />
+                    ))}
+                  </ul>
+                ) : (
+                  <div> Loading </div>
+                )
+              }
             </div>
           </div>
-        <div>
+        <div className='flag-container'>
           <img className='flag' src={countryData[0]?.image.value} alt="Drapeau" />
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>
-              Année
-            </th>
-            <th>
-              <img className='medal' src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gold_medal_olympic.svg/330px-Gold_medal_olympic.svg.png" alt="Médaille d'Or"/>
-            </th>
-            <th>
-              <img className='medal' src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Médaille d'Argent"/>
-            </th>
-            <th>
-              <img className='medal' src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/1920px-Bronze_medal_olympic.svg.png" alt="Médaille de Bronze"/>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {medalData?.map((row:QueryMedal, index) => (
-            <MedalTableRow key={index} infos={row} />
-          ))}
-        </tbody>
-      </table>
+      <div className='table-container'>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Année
+              </th>
+              <th>
+                <img className='medal' src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gold_medal_olympic.svg/330px-Gold_medal_olympic.svg.png" alt="Médaille d'Or"/>
+              </th>
+              <th>
+                <img className='medal' src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Médaille d'Argent"/>
+              </th>
+              <th>
+                <img className='medal' src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/1920px-Bronze_medal_olympic.svg.png" alt="Médaille de Bronze"/>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {medalData?.map((row:QueryMedal, index) => (
+              <MedalTableRow key={index} infos={row} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>   
   );
 }
