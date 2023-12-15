@@ -47,95 +47,6 @@ function TableauVignettes() {
     return await response.json();
   }
 
-  async function fetchOlympicGameData(id) {
-    const endpointUrl = 'https://query.wikidata.org/sparql';
-    const edition_query = `
-    wd:${id} rdfs:label ?edition.
-    FILTER(lang(?edition) = 'fr').
-    `;
-  const logo_query = `
-    wd:${id} p:P154 ?logo.
-    ?logo ps:P154 ?logoUrl.
-    `;
-
-  const location_query = `
-    wd:${id} p:P276 ?l.
-    ?l ps:P276 ?locationPage.
-    ?locationPage rdfs:label ?location.
-    FILTER(lang(?location) = 'fr').
-    `;
-
-  const counts_query = `
-    wd:${id} p:P1132 ?n.
-    ?n ps:P1132 ?count.
-    BIND(xsd:integer(?count) AS ?countValue).
-    `;
-
-  const country_query = `
-    wd:${id} p:P17 ?c.
-    ?c ps:P17 ?countryPage.
-    ?countryPage rdfs:label ?country.
-    FILTER(lang(?country) = 'fr').
-    `;
-
-  const start_time_query = `
-    wd:${id} p:P580 ?st.
-    ?st ps:P580 ?start_time.
-    `;
-
-  const end_time_query = `
-    wd:${id} p:P582 ?et.
-    ?et ps:P582 ?end_time.
-    `;
-
-  const sparqlQuery = `
-    SELECT ?edition ?location ?country ?logoUrl ?countValue ?start_time ?end_time
-    WHERE {
-      ${edition_query}
-      OPTIONAL{
-        ${location_query}
-      }
-      OPTIONAL{
-        ${country_query}
-      }
-      OPTIONAL {
-        ${counts_query}
-      }
-      OPTIONAL {
-        ${logo_query}
-      }
-      OPTIONAL {
-        ${start_time_query}
-        ${end_time_query}
-      }
-    }`;
-
-    const fullUrl = endpointUrl + '?query=' + encodeURIComponent(sparqlQuery);
-    const headers = { 'Accept': 'application/sparql-results+json' };
-  
-    const response = await fetch(fullUrl, { headers });
-    return await response.json();
-  }
-
-  async function fetchWikidataPays(id) {
-    const endpointUrl = 'https://query.wikidata.org/sparql';
-    const sparqlQuery = `
-    SELECT DISTINCT ?country ?name ?image WHERE {
-      ?pays_edition wdt:P179 wd:${id}.
-      ?pays_edition wdt:P17 ?country.
-      ?country wdt:P1813 ?name.
-      ?country wdt:P41 ?image.
-      FILTER(lang(?name) = 'fr')
-    }
-    `;
-    const fullUrl = endpointUrl + '?query=' + encodeURIComponent(sparqlQuery);
-    const headers = { 'Accept': 'application/sparql-results+json' };
-
-    const response = await fetch(fullUrl, { headers });
-    return await response.json();
-  }
-  
-
   async function createVignetteAthlete(id) {
     const data = await fetchWikidataAthlete(id);
     if (data.results.bindings.length > 0) {
@@ -154,45 +65,13 @@ function TableauVignettes() {
     }
 }
 
-async function createVignetteOlympicGame(id) {
-  const data = await fetchOlympicGameData(id);
-  if (data.results.bindings.length > 0) {
-      const item = data.results.bindings[0];
-      const vignetteData = {
-          id: id,
-          imageSrc: item.logoUrl ? item.logoUrl.value : '',
-          title: item.edition ? item.edition.value : '',
-          type: 'Edition',
-          description: item.location ? item.location.value : ''
-      };
-      console.log(vignetteData);
-      return vignetteData;
-  } else {
-      throw new Error('No data found for this id');
-  }
-}
-
-async function createVignettePays(id) {
-  const data = await fetchWikidataPays(id);
-  if (data.results.bindings.length > 0) {
-      const item = data.results.bindings[0];
-      const vignetteData = {
-          id: id,
-          imageSrc: item.image ? item.image.value : '',
-          title: item.name ? item.name.value : '',
-          type: 'Pays',
-          description: item.name ? item.name.value : ''
-      };
-      console.log(vignetteData);
-      return vignetteData;
-  } else {
-      throw new Error('No data found for this id');
-  }
-}
-
 
   const init = async () => {
     const initialVignettesData = [
+        { imageSrc: 'https://cdn0.iconfinder.com/data/icons/flags-of-the-world-2/128/france-3-4096.png', title: 'France', type: 'Pays', id :'1', description : 'Voir historique de la france aux JO' },
+        { imageSrc: 'https://th.bing.com/th/id/R.944bf66553c359b07f8dc12efcc2b92c?rik=%2fR5iAzoYH%2fqlUQ&riu=http%3a%2f%2fwww.drapeaux-du-monde.fr%2fdrapeaux-du-monde%2f3000%2fdrapeau-allemagne.jpg&ehk=Qdxz%2fBG89eaEloOoCJb3g9RodQuLuQXGUrSJhrDlfBA%3d&risl=&pid=ImgRaw&r=0', title: 'Allemagne', type: 'Pays', id :'2', description : 'Voir historique de l\'Allemagne aux JO' },
+        { imageSrc: 'https://th.bing.com/th/id/OIP.TA_zFbZvXDgomMeYmkNqVwHaE7?rs=1&pid=ImgDetMain', title: 'Italie', type: 'Pays', id :'3', description : 'Voir historique de l\'Italie aux JO' },
+        { imageSrc: 'https://freepngimg.com/thumb/spain/5-2-spain-flag-picture.png', title: 'Espagne', type: 'Pays', id :'4', description : 'Voir historique de l\'Espagne aux JO' },
         { imageSrc: 'https://th.bing.com/th/id/R.a6d0443a66c6d2c474b2e49929fa9127?rik=TVf752Pv%2fcEHaA&riu=http%3a%2f%2fsport24.lefigaro.fr%2fvar%2fplain_site%2fstorage%2fimages%2fnatation%2factualites%2fflorent-manaudou-impressionne-a-indianapolis-976779%2f26369753-1-fre-FR%2fFlorent-Manaudou-impressionne-a-Indianapolis.jpg&ehk=StLg9DNUQBizi4XTkYCqsXuZwubVRH77ww3L6zcfVuk%3d&risl=&pid=ImgRaw&r=0' , title: 'Florent Manaudou', type: 'Athlète', id :'Q137575', description : 'Voir le palmares de Florent Manaudou'},
         { imageSrc: 'https://th.bing.com/th/id/R.015a05314606efc84fde63e8aa8f5e51?rik=Xvin9UHC6RX6mQ&pid=ImgRaw&r=0' , title: 'Laura Manaudou', type: 'Athlète', id :'Q45659', description : 'Voir le palmares de Laura Manaudou'},
         { imageSrc: 'https://th.bing.com/th?id=OIF.ptw9dCIwkJBa2qa%2buJjxVg&rs=1&pid=ImgDetMain' , title: 'Simone Biles', type: 'Athlète', id :'Q7520267', description : 'Voir le palmares de Simone Biles'},
@@ -203,11 +82,6 @@ async function createVignettePays(id) {
         { imageSrc: 'https://th.bing.com/th/id/OIP.GBa4nRMzIMsdiAKFze3MoAHaF7?rs=1&pid=ImgDetMain' , title: 'basket en fauteuil', type: 'Sport', id :'Q1128216', description : 'Voir l historique du basket fauteuil au JO'},
         await createVignetteAthlete('Q3195752'),
         await createVignetteAthlete('Q1189'),
-        await createVignetteOlympicGame('Q8577'),
-        await createVignettePays('Q742512'),
-        await createVignettePays('Q749175'),
-        //await createVignettePays('Q844734'),
-        //await createVignettePays('Q751835'),
 
     ];
     setVignettesData(initialVignettesData);
