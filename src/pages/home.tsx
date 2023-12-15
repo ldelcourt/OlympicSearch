@@ -14,7 +14,7 @@ function Home() {
       <div>
         <Search />
       </div>
-      <TableauVignettes />
+      <TableauVignettes initialVignettes={null} />
     </div> 
   );
 }
