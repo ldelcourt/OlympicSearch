@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import Search from '../../Component/Search';
 
 
 import { useParams } from "react-router-dom";
@@ -82,7 +81,6 @@ function Sport() {
 
     return (
         <div>
-            <Search></Search>
             <div className="container">
                 <h1 className="p">
                     <strong>Discipline :</strong> {formattedName}

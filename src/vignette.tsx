@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Vignette.css';
 import { Link } from 'react-router-dom';
+import { SearchType } from './interfaces';
 
-interface VignetteProps {
-  id: string;
-  imageSrc: string;
-  title: string;
+export interface VignetteProps {
+  id?: string;
+  title?: string;
   type: string;
-  description: string;
+  imageSrc?: string;
+  description?: string;
 }
 
 function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
