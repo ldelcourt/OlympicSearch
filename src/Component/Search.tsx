@@ -4,6 +4,7 @@ import Vignette, { VignetteProps } from "../vignette";
 import { useEffect } from "react";
 import { json, useParams } from "react-router-dom";
 import { FecthResult, SearchQueryResult, SearchType } from "../interfaces";
+import TableauVignettes from "../tableauVignette";
 
 
 
@@ -99,17 +100,21 @@ function Search() {
     const countryQuery = `
     SELECT distinct ?id ?title ?description ?imageSrc
     WHERE {
-        ?id wdt:P31 wd:Q6256;  # Q6256 représente l'élément pour les pays, ajustez-le si nécessaire
-        wdt:P1344 ?jeuxOlympiques;
-        schema:description ?description; # P1344 indique la participation aux Jeux Olympiques
-        rdfs:label ?title.
+        ?temp wdt:P31 wd:Q26213387;
+            wdt:P17 ?country;
+            rdfs:label ?pageName;
+            wdt:P179 ?id.
+           
+        
         FILTER(
-          LANG(?title) = "fr" && 
-          CONTAINS(?title, "${texteSaisie}" )  
+          LANG(?pageName) = 'fr' && 
+          CONTAINS(?pageName, "${texteSaisie}" )  
         ).
-    OPTIONAL { ?id schema:description ?description }
-    OPTIONAL { ?id wdt:P41 ?imageSrc }
-    FILTER(lang(?description) = 'fr')
+    
+    OPTIONAL { ?country schema:description ?description }
+    OPTIONAL { ?country wdt:P41 ?imageSrc }
+    OPTIONAL { ?country rdfs:label ?title }
+    FILTER(lang(?description) = 'fr' && LANG(?title) = "fr")
 
     SERVICE wikibase:label {
       bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
@@ -119,9 +124,10 @@ function Search() {
 
 
   const handleClick = async () => {
-    await fetchData(editionQuery, 'edition');
-    await fetchData(sportQuery, 'sport');
-    await fetchData(countryQuery, 'pays');
+    setQueryResult([]);
+    await fetchData(editionQuery, 'Edition');
+    await fetchData(sportQuery, 'Sport');
+    await fetchData(countryQuery, 'Pays');
   };
 
 
@@ -138,12 +144,14 @@ function Search() {
             const result:FecthResult = await response.json();
             const temp: VignetteProps[] = result.results.bindings.map((row) => ({
               description: row.description.value,
-              id: row.id.value, 
+              id: row.id.value!.substring(row.id.value!.lastIndexOf('/') + 1), 
               imageSrc: row.imageSrc?.value,
               title: row.title.value,
               type: typeQuery,
             }));
-            setQueryResult((prevQueryResult) => [...prevQueryResult, ...temp]);          
+            setQueryResult((prevQueryResult) => {
+              return [...prevQueryResult, ...temp];
+            });          
             console.log({ result });
         } else {
             console.error("Erreur lors de la requête SPARQL");
@@ -184,10 +192,7 @@ const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
       </div>
 
     </div>
-      
-      { queryResult.map((vignette, i) => (
-        <Vignette key={i} id={vignette.id} type={vignette.type} imageSrc={vignette.imageSrc} description={vignette.description} title={vignette.title} />
-      ))}
+      <TableauVignettes initialVignettes={queryResult} />
     </>
   );
 

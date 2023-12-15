@@ -10,4 +10,4 @@ export interface SearchQueryResult {
   type?: { value: string };
 }
 
-export type SearchType = 'sport' | 'athelte' | 'pays' | 'edition';
+export type SearchType = 'Sport' | 'Athlète' | 'Pays' | 'Edition';

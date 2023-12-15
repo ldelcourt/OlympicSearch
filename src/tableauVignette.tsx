@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Vignette from './vignette'; 
+import Vignette, { VignetteProps } from './vignette'; 
 import './tableauVignette.css';
 
-interface VignetteData {
-  id: string;
-  imageSrc: string;
-  title: string;
-  type: string; 
-  description: string;
-}
 interface TableauVignettesProps {
-  initialVignettes?: VignetteData[] | null;
+  initialVignettes?: VignetteProps[] | null;
 }
 function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
-  const [vignettesData, setVignettesData] = useState<Array<VignetteData>>([]);
+  const [vignettesData, setVignettesData] = useState<Array<VignetteProps>>([]);
   const [filter, setFilter] = useState<string | null>(null);
 
   async function fetchWikidataAthlete(id) {
@@ -194,7 +187,7 @@ async function createVignettePays(id) {
 
 
   const init = async () => {
-    if (initialVignettes === null) {
+    if (initialVignettes?.length == 0) {
       const initialVignettesData = [
         { imageSrc: 'https://th.bing.com/th/id/R.a6d0443a66c6d2c474b2e49929fa9127?rik=TVf752Pv%2fcEHaA&riu=http%3a%2f%2fsport24.lefigaro.fr%2fvar%2fplain_site%2fstorage%2fimages%2fnatation%2factualites%2fflorent-manaudou-impressionne-a-indianapolis-976779%2f26369753-1-fre-FR%2fFlorent-Manaudou-impressionne-a-Indianapolis.jpg&ehk=StLg9DNUQBizi4XTkYCqsXuZwubVRH77ww3L6zcfVuk%3d&risl=&pid=ImgRaw&r=0' , title: 'Florent Manaudou', type: 'Athlète', id :'Q137575', description : 'Voir le palmares de Florent Manaudou'},
         { imageSrc: 'https://th.bing.com/th/id/R.015a05314606efc84fde63e8aa8f5e51?rik=Xvin9UHC6RX6mQ&pid=ImgRaw&r=0' , title: 'Laura Manaudou', type: 'Athlète', id :'Q45659', description : 'Voir le palmares de Laura Manaudou'},
@@ -224,7 +217,7 @@ async function createVignettePays(id) {
     init();
   }, [initialVignettes]);
 
-  const addVignette = (newVignette: VignetteData) => {
+  const addVignette = (newVignette: VignetteProps) => {
     if (newVignette.type === 'Human') {
       newVignette.type = 'Athlète';
     }
