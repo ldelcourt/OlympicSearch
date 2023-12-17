@@ -1,13 +1,17 @@
-export interface FecthResult {
-  results : { bindings: SearchQueryResult[] };
+export interface FecthResult<TypeResult> {
+  results? : { bindings: TypeResult[] };
+}
+
+export interface QueryValue {
+  value: string;
 }
 
 export interface SearchQueryResult {
-  description: { value?: string };
-  title: { value?: string };
-  id: { value?: string };
-  imageSrc: { value?: string };
-  type?: { value: string };
+  description: QueryValue;
+  title: QueryValue;
+  id: QueryValue;
+  imageSrc: QueryValue;
+  type?: QueryValue;
 }
 
 export type SearchType = 'Sport' | 'Athlète' | 'Pays' | 'Edition';

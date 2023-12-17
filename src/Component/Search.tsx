@@ -7,33 +7,12 @@ import { FecthResult, SearchQueryResult, SearchType } from "../interfaces";
 import TableauVignettes from "../tableauVignette";
 
 
-
-const formatInput = (input: string): string => {
-  // Divisez la chaîne en utilisant "_" comme séparateur
-  const parts = input.split('_');
-
-  // Vérifiez s'il y a au moins deux parties (nom et prénom)
-  if (parts.length >= 2) {
-      // Formatez le nom et le prénom avec la première lettre en majuscule
-      const part1 = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-      const part2 = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
-
-      // Retournez la chaîne formatée
-      return `${part1} ${part2}`;
-  } else {
-      // Si la chaîne ne contient pas au moins deux parties, retournez la chaîne inchangée
-      return input;
-  }
-};
-
 function Search() {
   //var result =JSON.stringify({ });
   const [texteSaisie, setTexteSaisie] = useState<string>();
 
   //Tableau pour stocker les resultats de la query
   const [queryResult, setQueryResult] =useState<VignetteProps[]>([]);
-  const { name } = useParams<{ name?: string }>();
-  // const formattedInput = formatInput(name || '');
 
    /** Requete Wikimedia
      * Les Requetes doivent rendre des attributs aux noms suivant
@@ -45,7 +24,7 @@ function Search() {
      * 
      */
    const editionQuery = `
-   SELECT DISTINCT ?id ?title ?image ?description
+   SELECT DISTINCT ?id ?title ?imageSrc ?description
    WHERE {
      ?id wdt:P31 wd:Q159821;
                   rdfs:label ?title;
@@ -64,7 +43,7 @@ function Search() {
      OPTIONAL { ?id wdt:P154 ?image2. }
 
  
-     BIND(COALESCE(?image1, ?image2) AS ?image)
+     BIND(COALESCE(?image1, ?image2) AS ?imageSrc)
    
      SERVICE wikibase:label {
        bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
@@ -76,7 +55,7 @@ function Search() {
    const sportQuery = `
    SELECT ?title ?id ?imageSrc ?description
    WHERE {
-     ?id wdt:P31 wd:Q31629;   # Type de sport : tennis
+     ?id wdt:P31 wd:Q31629;
             rdfs:label ?title;
             p:P279 ?subclass_sport;
             schema:description ?description.
@@ -141,7 +120,7 @@ function Search() {
         });
 
         if (response.ok) {
-            const result:FecthResult = await response.json();
+            const result:FecthResult<SearchQueryResult> = await response.json();
             const temp: VignetteProps[] = result.results.bindings.map((row) => ({
               description: row.description.value,
               id: row.id.value!.substring(row.id.value!.lastIndexOf('/') + 1), 
