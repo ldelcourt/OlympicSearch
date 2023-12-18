@@ -3,6 +3,7 @@ export type EditionData = {
   location?: string;
   country: string;
   logo_url: string;
+  second_logo_url: string;
   participants_count: number;
   nations_count: number;
   sports_count: number;
@@ -29,6 +30,11 @@ export const fetchEditionData = async (
     wd:${edition} p:P154 ?logo.
     ?logo ps:P154 ?logoUrl.
     `;
+  
+  const second_logo_query = `
+  wd:${edition} wdt:P18 ?secondLogoUrl.
+  `;
+
 
   const location_query = `
     wd:${edition} p:P276 ?l.
@@ -61,7 +67,7 @@ export const fetchEditionData = async (
     `;
 
   const query = `
-    SELECT ?edition ?location ?country ?logoUrl ?countValue ?start_time ?end_time
+    SELECT ?edition ?location ?country ?logoUrl ?secondLogoUrl ?countValue ?start_time ?end_time
     WHERE {
       ${edition_query}
       OPTIONAL{
@@ -75,6 +81,9 @@ export const fetchEditionData = async (
       }
       OPTIONAL {
         ${logo_query}
+      }
+      OPTIONAl {
+        ${second_logo_query}
       }
       OPTIONAL {
         ${start_time_query}
@@ -110,6 +119,7 @@ export const fetchEditionData = async (
 
     if (response.ok) {
       const res = await response.json();
+      console.log({res});
       if (res.results.bindings?.length) {
         let nations_count = +res.results.bindings[0]?.countValue.value;
         for (const bind of res.results.bindings) {
@@ -133,6 +143,7 @@ export const fetchEditionData = async (
         return {
           edition: data?.edition?.value,
           logo_url: data?.logoUrl?.value,
+          second_logo_url: data?.secondLogoUrl?.value,
           location: data?.location.value,
           country: data?.country?.value,
           participants_count,
