@@ -39,8 +39,8 @@ function Search() {
      FILTER(LANG(?description) = 'fr').
 
      OPTIONAL { ?id wdt:P17 ?pays;}
-     OPTIONAL { ?id wdt:P18 ?image1. }
-     OPTIONAL { ?id wdt:P154 ?image2. }
+     OPTIONAL { ?id wdt:P18 ?image2. }
+     OPTIONAL { ?id wdt:P154 ?image1. }
 
  
      BIND(COALESCE(?image1, ?image2) AS ?imageSrc)
@@ -162,6 +162,11 @@ const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
           value={texteSaisie}
           onChange={handleChange}
           placeholder="Rechercher..."
+          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+            if(event.key === "Enter"){
+              handleClick()
+            } 
+          }}
         />
         <button onClick={handleClick} type="submit" id="search-button">
           <img
