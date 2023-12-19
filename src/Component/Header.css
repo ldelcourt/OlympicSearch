@@ -8,7 +8,7 @@ header {
     background-color: #0936b3;
     color: #fff;
     padding: 10px;
-    text-align: center;
+    /* text-align: center; */
 }
 
 header img {
@@ -29,7 +29,7 @@ header img:hover {
 header h1 {
     margin: 0;
     line-height: 70px; /* Adjust the line height to vertically center the title */
-     margin-right: 1000px;/* Add auto margin to push the h1 element to the left */
+    margin-left: 5%; /*Add auto margin to push the h1 element to the left */
     font-family: Jockey One;
     font-size: 45px;
     transition: color 0.3s ease; /* Add transition property for smooth color change */
