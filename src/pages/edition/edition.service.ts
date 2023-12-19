@@ -162,7 +162,7 @@ export const fetchSports = async (
   const base_endpoint = "https://query.wikidata.org/sparql";
 
   const query = `
-    SELECT ?sport_label
+    SELECT ?sport_label ?sport
     WHERE {
       wd:${edition} p:P527 ?sp.
       ?sp ps:P527 ?sports_page.
@@ -184,11 +184,15 @@ export const fetchSports = async (
       const res = await response.json();
       if (res.results.bindings?.length) {
         const data: string[] = res.results.bindings.map((res: any) => {
-          return (
+          return ( {
+            name : 
             res.sport_label.value.charAt(0).toUpperCase() +
-            res.sport_label.value.slice(1).toLowerCase()
+            res.sport_label.value.slice(1).toLowerCase(),
+            id: res.sport.value.split("/")[res.sport.value.split("/").length - 1],
+          }
           );
         });
+        console.log(data);
         return data;
       }
     } else {

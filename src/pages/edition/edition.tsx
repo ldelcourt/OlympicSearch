@@ -17,7 +17,7 @@ const Edition = () => {
     { previous: string; next: string } | undefined
   >();
   const [ranking, setRanking] = useState<Ranking[]>([]);
-  const [sports, setSports] = useState<string[]>([]);
+  const [sports, setSports] = useState<{name: string, id:string}[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentFilter, setCurrentFilter] = useState<string>("total");
   const handleFetchEditionData = async () => {
@@ -137,9 +137,9 @@ const Edition = () => {
       <div className="edition-sports">
         <h2>Liste des sports</h2>
         <ul>
-          {sports.map((sport: string, index: number) => (
-            <li key={index}>
-              {sport} <span> - </span>
+          {sports.map((sport: {name: string, id:string}) => (
+            <li key={sport.id}>
+              <Link to={`../sport/${sport.id}`}>{sport.name}</Link> <span> - </span>
             </li>
           ))}
         </ul>
