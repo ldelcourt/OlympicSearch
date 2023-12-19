@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 import './athlete.css';
+import { FecthResult, QueryValue } from "../../interfaces";
+
 
 /*
 const formatNomPrenom = (nomPrenom: string): string => {
@@ -26,9 +28,9 @@ const formatNomPrenom = (nomPrenom: string): string => {
 
 let test = 0;
 
-const CountGoldMedals = (data: any) => {
+const CountGoldMedals = (athleteData: any) => {
     let count = 0;
-    data?.results?.bindings.map((binding: any, i: number) => {
+    athleteData?.results?.bindings.map((binding: any, i: number) => {
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -39,9 +41,9 @@ const CountGoldMedals = (data: any) => {
     return count;
 }
 
-const CountSilverMedals = (data: any) => {
+const CountSilverMedals = (athleteData: any) => {
     let count = 0;
-    data?.results?.bindings.map((binding: any, i: number) => {
+    athleteData?.results?.bindings.map((binding: any, i: number) => {
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -52,9 +54,9 @@ const CountSilverMedals = (data: any) => {
     return count;
 }
 
-const CountBronzeMedals = (data: any) => {
+const CountBronzeMedals = (athleteData: any) => {
     let count = 0;
-    data?.results?.bindings.map((binding: any, i: number) => {
+    athleteData?.results?.bindings.map((binding: any, i: number) => {
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -65,11 +67,18 @@ const CountBronzeMedals = (data: any) => {
     return count;
 }
 
+interface CountryQueryResult {
+    id: QueryValue;
+    name: QueryValue;
+}
 
 function Athlete() {
+    const [texteSaisie, setTexteSaisie] = useState<string>();
     const naviguate = useNavigate();
     const { idParam } = useParams<{ idParam: string }>(); // Récupère l'identifiant de l'athlète dans l'URL
-    const [data, setData] = useState<any>();
+    const [athleteData, setAthleteData] = useState<any>();
+    const [countryData, setCountryData] = useState<FecthResult<CountryQueryResult>>();
+
 
     const fetchData = async () => {
         const base_endpoint = "https://query.wikidata.org/sparql";
@@ -80,6 +89,7 @@ function Athlete() {
         ?instanceOfCompetitions ?instanceOfCompetitionsLabel 
         ?sportInEdition ?OlympicEdition ?OlympicEditionLabel ?FurtherEdition ?FurtherEditionLabel
         ?instanceOfEdition ?instanceOfEditionLabel ?instanceOfFurtherEdition ?instanceOfFurtherEditionLabel
+        ?epreuve ?epreuveLabel 
 
     
         WHERE {
@@ -93,11 +103,12 @@ function Athlete() {
             OPTIONAL { ?person wdt:P641 ?sport. }
             OPTIONAL { ?person p:P1344 ?participation. }
             OPTIONAL { ?participation ps:P1344 ?competitions. }
+
+            OPTIONAL { ?participation pq:P805 ?epreuve. }
+
             OPTIONAL { ?competitions wdt:P31 ?instanceOfCompetitions. }
             OPTIONAL { ?competitions wdt:P361 ?sportInEdition. }
             
-
-
 
             OPTIONAL { ?participation pq:P166 ?medals. }
             OPTIONAL { ?participation pq:P1352 ?ranking. }
@@ -111,10 +122,33 @@ function Athlete() {
             OPTIONAL { ?person wdt:P1532 ?countryForSport. 
                 OPTIONAL { ?countryForSport wdt:P41 ?countryForSportImage. }
             } 
-        }
-        
-        
+        }        
         `;
+
+        const countryQuery = `
+        SELECT distinct ?id ?title ?description ?imageSrc
+        WHERE {
+            ?temp wdt:P31 wd:Q26213387;
+                wdt:P17 ?country;
+                rdfs:label ?pageName;
+                wdt:P179 ?id.
+               
+            
+            FILTER(
+              LANG(?pageName) = 'fr' && 
+              CONTAINS(?pageName, "France" )  
+            ).
+        
+        OPTIONAL { ?country schema:description ?description }
+        OPTIONAL { ?country wdt:P41 ?imageSrc }
+        OPTIONAL { ?country rdfs:label ?title }
+        FILTER(lang(?description) = 'fr' && LANG(?title) = "fr")
+    
+        SERVICE wikibase:label {
+          bd:serviceParam wikibase:language "fr".
+          }
+        } 
+      `;
 
 
         try {
@@ -122,16 +156,19 @@ function Athlete() {
                 method: "GET",
             });
 
+            const response2 = await fetch(`${base_endpoint}?query=${encodeURIComponent(countryQuery)}&format=json`, {
+                method: "GET",
+            });
+            
             if (response.ok) {
                 const result = await response.json();
                 console.log({ result });
-
-                const competitions = result?.results?.bindings?.[0]?.competitions?.value;
-                if (competitions === "summer olympic games") {
-                    test = 2;
-                }
-
-                setData(result);
+                setAthleteData(result);
+            }
+            if (response2.ok) {
+                const result = await response.json();
+                console.log({ result });
+                setCountryData(result);
             }
         } catch (error) {
             console.error(error);
@@ -153,7 +190,7 @@ function Athlete() {
     };
 
 
-    const countryForSport = data?.results?.bindings[0]?.countryForSport?.value;
+    const countryForSport = athleteData?.results?.bindings[0]?.countryForSport?.value;
     if(countryForSport !== undefined ){
         console.log(countryForSport);
     }
@@ -163,38 +200,42 @@ function Athlete() {
         <div>
             <div className="containerr">
                 <h1 className="pp">
-                    <strong>Nom :</strong> {data?.results?.bindings[0]?.titre?.value}
+                    <strong>Nom :</strong> {athleteData?.results?.bindings[0]?.titre?.value}
                     <br />
-                    <strong>Nation représentée :  {data?.results?.bindings[0]?.countryForSportLabel?.value}</strong> {data?.results?.bindings[0]?.countryForSportImage?.value && <img className="flagg" src={data?.results?.bindings[0]?.countryForSportImage?.value} />} {data?.results?.bindings[0]?.countryForSportLabel ===undefined && <strong> {data?.results?.bindings[0]?.countryOfCitizenshipLabel?.value} {data?.results?.bindings[0]?.countryOfCitizenshipImage?.value && <img className="flagg" src={data?.results?.bindings[0]?.countryOfCitizenshipImage?.value} />}</strong>}
+                    <strong>Nation représentée :  {athleteData?.results?.bindings[0]?.countryForSportLabel?.value}</strong> {athleteData?.results?.bindings[0]?.countryForSportImage?.value && <img className="flagg" src={athleteData?.results?.bindings[0]?.countryForSportImage?.value} />} {athleteData?.results?.bindings[0]?.countryForSportLabel ===undefined && <strong> {athleteData?.results?.bindings[0]?.countryOfCitizenshipLabel?.value} {athleteData?.results?.bindings[0]?.countryOfCitizenshipImage?.value && <img className="flagg" src={athleteData?.results?.bindings[0]?.countryOfCitizenshipImage?.value} />}</strong>}
+
                     <br />
                     <br />
-                    <strong>Date de naissance :</strong> {data?.results?.bindings[0]?.birthdate?.value && formatDate(data?.results?.bindings[0]?.birthdate?.value)} (Âge : {data?.results?.bindings[0]?.birthdate?.value && Math.floor((new Date().getTime() - new Date(data?.results?.bindings[0]?.birthdate?.value).getTime()) / (1000 * 3600 * 24 * 365.25))} ans)
+                    <strong>Date de naissance :</strong> {athleteData?.results?.bindings[0]?.birthdate?.value && formatDate(athleteData?.results?.bindings[0]?.birthdate?.value)} (Âge : {athleteData?.results?.bindings[0]?.birthdate?.value && Math.floor((new Date().getTime() - new Date(athleteData?.results?.bindings[0]?.birthdate?.value).getTime()) / (1000 * 3600 * 24 * 365.25))} ans)
                     <br />
-                    <strong>Sexe :</strong> {data?.results?.bindings[0]?.gender?.value === "http://www.wikidata.org/entity/Q6581097" ? "Homme" : "Femme"}
+                    <strong>Sexe :</strong> {athleteData?.results?.bindings[0]?.gender?.value === "http://www.wikidata.org/entity/Q6581097" ? "Homme" : "Femme"}
                     <br />
-                    <strong>Lieu de naissance :</strong> {data?.results?.bindings[0]?.birthplaceLabel?.value} {data?.results?.bindings[0]?.birthCountryImage?.value && <img className="flagg" src={data?.results?.bindings[0]?.birthCountryImage?.value} />}
+                    <strong>Lieu de naissance :</strong> {athleteData?.results?.bindings[0]?.birthplaceLabel?.value} {athleteData?.results?.bindings[0]?.birthCountryImage?.value && <img className="flagg" src={athleteData?.results?.bindings[0]?.birthCountryImage?.value} />}
                     <br />
-                    <strong>Description :</strong> {data?.results?.bindings[0]?.description?.value}
+                    <strong>Description :</strong> {athleteData?.results?.bindings[0]?.description?.value}
                     <br />
-                    <strong>Disciplines :</strong> {data?.results?.bindings[0]?.sportLabel?.value}
+                    <strong>Disciplines :</strong> {athleteData?.results?.bindings[0]?.sportLabel?.value}
                     <br />
-                    <strong>Taille :</strong> {data?.results?.bindings[0]?.height?.value} m  <strong>  Poids :</strong> {data?.results?.bindings[0]?.weight?.value} kg
+                    <strong>Taille :</strong> {athleteData?.results?.bindings[0]?.height?.value} m  
+                    {athleteData?.results?.bindings[0]?.weight?.value && <span><strong>  Poids :</strong> {athleteData?.results?.bindings[0]?.weight?.value} kg</span>}
+                    {!athleteData?.results?.bindings[0]?.weight?.value && <span><strong>  Poids :</strong> inconnu </span>}
+
                 </h1>
 
                 <h2 className="imagee">
-                    <img src={data?.results?.bindings[0]?.image?.value} />
+                    <img src={athleteData?.results?.bindings[0]?.image?.value} />
                 </h2>
 
             </div>
             <h3 className="compett">
                 <strong>Palmarès Olympique :</strong>
                 <br />
-                Total : <strong> {CountGoldMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gold_medal_olympic.svg/330px-Gold_medal_olympic.svg.png" alt="Gold Medal" />
-                    {CountSilverMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Silver Medal" />
-                    {CountBronzeMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/330px-Bronze_medal_olympic.svg.png" alt="Bronze Medal" />
+                Total : <strong> {CountGoldMedals(athleteData)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gold_medal_olympic.svg/330px-Gold_medal_olympic.svg.png" alt="Gold Medal" />
+                    {CountSilverMedals(athleteData)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Silver Medal" />
+                    {CountBronzeMedals(athleteData)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/330px-Bronze_medal_olympic.svg.png" alt="Bronze Medal" />
                 </strong>
                 
-                {data?.results?.bindings.map((binding: any, i: number) => {
+                {athleteData?.results?.bindings.map((binding: any, i: number) => {
                     const competitionLabel = binding.competitionsLabel?.value;
                     const competition = binding.competitions?.value;
                     const medalsLabel = binding.medalsLabel?.value;
@@ -204,6 +245,7 @@ function Athlete() {
                     const furtherEdition= binding.FurtherEdition?.value;
                     const instanceOfEditionLabel = binding.instanceOfEditionLabel?.value;
                     const instanceOfFurtherEditionLabel = binding.instanceOfFurtherEditionLabel?.value;
+                    const epreuveLabel = binding.epreuveLabel?.value;
                     if (competitionLabel && competitionLabel.toLowerCase().includes("olymp")) {
                         return (
                             <p key={i}>
@@ -225,14 +267,14 @@ function Athlete() {
 
                                 </span>
                                 {instanceOfCompetitionsLabel !== "Jeux olympiques d’été" && <span>{competitionLabel}</span>}
-                                    
-                            </p>
+                                {epreuveLabel && <span> ({epreuveLabel})</span>} 
+                            </p>    
                         );
                     }
                     return null;
                 })}
             </h3>
-            {data?.results?.bindings.length === 0 && <h4>Erreur : Aucune donnée trouvée</h4>}
+            {athleteData?.results?.bindings.length === 0 && <h4>Erreur : Aucune donnée trouvée</h4>}
 
 
         </div>
