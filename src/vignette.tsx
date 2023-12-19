@@ -26,7 +26,7 @@ function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
         return `/athlete/${id}`;
       case 'Sport':
         return `/sport/${id}`
-      case 'Pays ':
+      case 'Pays':
         return `/pays/${id}`;
       case 'Edition':
         return `/edition/${id}`;

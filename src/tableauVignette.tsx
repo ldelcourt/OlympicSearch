@@ -129,6 +129,26 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
     const response = await fetch(fullUrl, { headers });
     return await response.json();
   }
+
+  async function fetchWikidataSport(id) {
+    const endpointUrl = 'https://query.wikidata.org/sparql';
+    const sportQuery = `
+        SELECT ?name ?icon ?description ?pays ?paysLabel
+        WHERE {
+            wd:${id} rdfs:label ?name;
+                    schema:description ?description.
+            OPTIONAL { wd:${id} wdt:P495 ?pays }
+            OPTIONAL { wd:${id} wdt:P2910 ?icon }
+            FILTER(LANG(?name) = 'fr' && LANG(?description) = 'fr').
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
+        }
+        `;
+    const fullUrl = endpointUrl + '?query=' + encodeURIComponent(sportQuery);
+    const headers = { 'Accept': 'application/sparql-results+json' };
+
+    const response = await fetch(fullUrl, { headers });
+    return await response.json();
+  }
   
 
   async function createVignetteAthlete(id) {
@@ -185,6 +205,24 @@ async function createVignettePays(id) {
   }
 }
 
+async function createVignetteSport(id) {
+  const data = await fetchWikidataSport(id);
+  if (data.results.bindings.length > 0) {
+      const item = data.results.bindings[0];
+      const vignetteData = {
+          id: id,
+          imageSrc: item.icon ? item.icon.value : '',
+          title: item.name ? item.name.value : '',
+          type: 'Sport',
+          description: item.description ? item.description.value : ''
+      };
+      console.log(vignetteData);
+      return vignetteData;
+  } else {
+      throw new Error('No data found for this id');
+  }
+}
+
 
   const init = async () => {
     if (initialVignettes?.length == 0) {
@@ -194,9 +232,9 @@ async function createVignettePays(id) {
         //{ imageSrc: 'https://th.bing.com/th?id=OIF.ptw9dCIwkJBa2qa%2buJjxVg&rs=1&pid=ImgDetMain' , title: 'Simone Biles', type: 'Athlète', id :'Q7520267', description : 'Voir le palmares de Simone Biles'},
         //{ imageSrc: 'https://th.bing.com/th/id/OIP.ekg2Z9822n1eCZeXCVGrIgHaE8?rs=1&pid=ImgDetMain' , title: 'Nikola Karabatic', type: 'Athlète', id :'Q157809', description : 'Voir le palmares de Nikola Karabatic'},
         //{ imageSrc: 'https://th.bing.com/th/id/R.1692f06dcbda11972009a6d402824e39?rik=odcIkiwW70wfPw&pid=ImgRaw&r=0' , title: 'Thierry Omeyer', type: 'Athlète', id :'Q134709', description : 'Voir le palmares de Thierry Omeyer'},
-        { imageSrc: 'https://www.gardasee.de/sites/default/files/teaserimg/tennis_adobestock_285441870_0.jpeg' , title: 'Tennis', type: 'Sport', id :'Q847', description : 'Voir l historique du tennis au JO'},
-        { imageSrc: 'https://th.bing.com/th/id/OIP.X287QnzDv7AT_1SLpnpb2QHaE8?rs=1&pid=ImgDetMain' , title: 'athlétisme', type: 'Sport', id :'Q542', description : 'Voir l historique de l athètisme au JO'},
-        { imageSrc: 'https://th.bing.com/th/id/OIP.GBa4nRMzIMsdiAKFze3MoAHaF7?rs=1&pid=ImgDetMain' , title: 'basket en fauteuil', type: 'Sport', id :'Q1128216', description : 'Voir l historique du basket fauteuil au JO'},
+        //{ imageSrc: 'https://www.gardasee.de/sites/default/files/teaserimg/tennis_adobestock_285441870_0.jpeg' , title: 'Tennis', type: 'Sport', id :'Q847', description : 'Voir l historique du tennis au JO'},
+        //{ imageSrc: 'https://th.bing.com/th/id/OIP.X287QnzDv7AT_1SLpnpb2QHaE8?rs=1&pid=ImgDetMain' , title: 'athlétisme', type: 'Sport', id :'Q542', description : 'Voir l historique de l athètisme au JO'},
+        //{ imageSrc: 'https://th.bing.com/th/id/OIP.GBa4nRMzIMsdiAKFze3MoAHaF7?rs=1&pid=ImgDetMain' , title: 'basket en fauteuil', type: 'Sport', id :'Q1128216', description : 'Voir l historique du basket fauteuil au JO'},
         await createVignetteAthlete('Q3195752'),
         await createVignetteAthlete('Q1189'),
         await createVignetteAthlete('Q157809'),
@@ -205,7 +243,22 @@ async function createVignettePays(id) {
         await createVignettePays('Q749175'),
         await createVignetteAthlete('Q705966'),
         await createVignetteAthlete('Q1652'),
-
+        await createVignetteSport('Q847'),
+        await createVignetteSport('Q542'),
+        await createVignetteSport('Q1128216'),
+        await createVignetteOlympicGame('Q995653'),
+        await createVignetteOlympicGame('Q181278'),
+        await createVignetteOlympicGame('Q8613'),
+        await createVignetteOlympicGame('Q8577'),
+        await createVignetteOlympicGame('Q8567'),
+        await createVignetteAthlete('Q39562'),
+        await createVignetteAthlete('Q22102'),
+        await createVignetteAthlete('Q131237'),
+        await createVignetteAthlete('Q216256'),
+        await createVignetteAthlete('Q189408'),
+        await createVignetteAthlete('Q177969'),
+        await createVignetteSport('Q43450'),
+        //await createVignettePays('Q742661'),
 
     ];
       setVignettesData(initialVignettesData);
