@@ -42,6 +42,115 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
     return await response.json();
   }
 
+  async function fetchOlympicGameData(id) {
+    const endpointUrl = 'https://query.wikidata.org/sparql';
+    const edition_query = `
+    wd:${id} rdfs:label ?edition.
+    FILTER(lang(?edition) = 'fr').
+    `;
+  const logo_query = `
+    wd:${id} p:P154 ?logo.
+    ?logo ps:P154 ?logoUrl.
+    `;
+
+  const location_query = `
+    wd:${id} p:P276 ?l.
+    ?l ps:P276 ?locationPage.
+    ?locationPage rdfs:label ?location.
+    FILTER(lang(?location) = 'fr').
+    `;
+
+  const counts_query = `
+    wd:${id} p:P1132 ?n.
+    ?n ps:P1132 ?count.
+    BIND(xsd:integer(?count) AS ?countValue).
+    `;
+
+  const country_query = `
+    wd:${id} p:P17 ?c.
+    ?c ps:P17 ?countryPage.
+    ?countryPage rdfs:label ?country.
+    FILTER(lang(?country) = 'fr').
+    `;
+
+  const start_time_query = `
+    wd:${id} p:P580 ?st.
+    ?st ps:P580 ?start_time.
+    `;
+
+  const end_time_query = `
+    wd:${id} p:P582 ?et.
+    ?et ps:P582 ?end_time.
+    `;
+
+  const sparqlQuery = `
+    SELECT ?edition ?location ?country ?logoUrl ?countValue ?start_time ?end_time
+    WHERE {
+      ${edition_query}
+      OPTIONAL{
+        ${location_query}
+      }
+      OPTIONAL{
+        ${country_query}
+      }
+      OPTIONAL {
+        ${counts_query}
+      }
+      OPTIONAL {
+        ${logo_query}
+      }
+      OPTIONAL {
+        ${start_time_query}
+        ${end_time_query}
+      }
+    }`;
+
+    const fullUrl = endpointUrl + '?query=' + encodeURIComponent(sparqlQuery);
+    const headers = { 'Accept': 'application/sparql-results+json' };
+  
+    const response = await fetch(fullUrl, { headers });
+    return await response.json();
+  }
+
+  async function fetchWikidataPays(id) {
+    const endpointUrl = 'https://query.wikidata.org/sparql';
+    const sparqlQuery = `
+    SELECT DISTINCT ?country ?name ?image WHERE {
+      ?pays_edition wdt:P179 wd:${id}.
+      ?pays_edition wdt:P17 ?country.
+      ?country wdt:P1813 ?name.
+      ?country wdt:P41 ?image.
+      FILTER(lang(?name) = 'fr')
+    }
+    `;
+    const fullUrl = endpointUrl + '?query=' + encodeURIComponent(sparqlQuery);
+    const headers = { 'Accept': 'application/sparql-results+json' };
+
+    const response = await fetch(fullUrl, { headers });
+    return await response.json();
+  }
+
+  async function fetchWikidataSport(id) {
+    const endpointUrl = 'https://query.wikidata.org/sparql';
+    const sportQuery = `
+        SELECT ?name ?icon ?description ?pays ?paysLabel
+        WHERE {
+            wd:${id} rdfs:label ?name;
+                    schema:description ?description.
+            OPTIONAL { wd:${id} wdt:P495 ?pays }
+            OPTIONAL { wd:${id} wdt:P2910 ?icon }
+            FILTER(LANG(?name) = 'fr' && LANG(?description) = 'fr').
+            SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
+        }
+        `;
+    const fullUrl = endpointUrl + '?query=' + encodeURIComponent(sportQuery);
+    const headers = { 'Accept': 'application/sparql-results+json' };
+
+    const response = await fetch(fullUrl, { headers });
+    return await response.json();
+  }
+  
+
   async function createVignetteAthlete(id) {
     const data = await fetchWikidataAthlete(id);
     if (data.results.bindings.length > 0) {
@@ -60,20 +169,96 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
     }
 }
 
+async function createVignetteOlympicGame(id) {
+  const data = await fetchOlympicGameData(id);
+  if (data.results.bindings.length > 0) {
+      const item = data.results.bindings[0];
+      const vignetteData = {
+          id: id,
+          imageSrc: item.logoUrl ? item.logoUrl.value : '',
+          title: item.edition ? item.edition.value : '',
+          type: 'Edition',
+          description: item.location ? item.location.value : ''
+      };
+      console.log(vignetteData);
+      return vignetteData;
+  } else {
+      throw new Error('No data found for this id');
+  }
+}
+
+async function createVignettePays(id) {
+  const data = await fetchWikidataPays(id);
+  if (data.results.bindings.length > 0) {
+      const item = data.results.bindings[0];
+      const vignetteData = {
+          id: id,
+          imageSrc: item.image ? item.image.value : '',
+          title: item.name ? item.name.value : '',
+          type: 'Pays',
+          description: item.name ? item.name.value : ''
+      };
+      console.log(vignetteData);
+      return vignetteData;
+  } else {
+      throw new Error('No data found for this id');
+  }
+}
+
+async function createVignetteSport(id) {
+  const data = await fetchWikidataSport(id);
+  if (data.results.bindings.length > 0) {
+      const item = data.results.bindings[0];
+      const vignetteData = {
+          id: id,
+          imageSrc: item.icon ? item.icon.value : '',
+          title: item.name ? item.name.value : '',
+          type: 'Sport',
+          description: item.description ? item.description.value : ''
+      };
+      console.log(vignetteData);
+      return vignetteData;
+  } else {
+      throw new Error('No data found for this id');
+  }
+}
+
 
   const init = async () => {
     if (initialVignettes?.length == 0) {
       const initialVignettesData = [
-        { imageSrc: 'https://th.bing.com/th/id/R.a6d0443a66c6d2c474b2e49929fa9127?rik=TVf752Pv%2fcEHaA&riu=http%3a%2f%2fsport24.lefigaro.fr%2fvar%2fplain_site%2fstorage%2fimages%2fnatation%2factualites%2fflorent-manaudou-impressionne-a-indianapolis-976779%2f26369753-1-fre-FR%2fFlorent-Manaudou-impressionne-a-Indianapolis.jpg&ehk=StLg9DNUQBizi4XTkYCqsXuZwubVRH77ww3L6zcfVuk%3d&risl=&pid=ImgRaw&r=0' , title: 'Florent Manaudou', type: 'Athlète', id :'Q137575', description : 'Voir le palmares de Florent Manaudou'},
-        { imageSrc: 'https://th.bing.com/th/id/R.015a05314606efc84fde63e8aa8f5e51?rik=Xvin9UHC6RX6mQ&pid=ImgRaw&r=0' , title: 'Laura Manaudou', type: 'Athlète', id :'Q45659', description : 'Voir le palmares de Laura Manaudou'},
-        { imageSrc: 'https://th.bing.com/th?id=OIF.ptw9dCIwkJBa2qa%2buJjxVg&rs=1&pid=ImgDetMain' , title: 'Simone Biles', type: 'Athlète', id :'Q7520267', description : 'Voir le palmares de Simone Biles'},
-        { imageSrc: 'https://th.bing.com/th/id/OIP.ekg2Z9822n1eCZeXCVGrIgHaE8?rs=1&pid=ImgDetMain' , title: 'Nikola Karabatic', type: 'Athlète', id :'Q157809', description : 'Voir le palmares de Nikola Karabatic'},
-        { imageSrc: 'https://th.bing.com/th/id/R.1692f06dcbda11972009a6d402824e39?rik=odcIkiwW70wfPw&pid=ImgRaw&r=0' , title: 'Thierry Omeyer', type: 'Athlète', id :'Q134709', description : 'Voir le palmares de Thierry Omeyer'},
-        { imageSrc: 'https://www.gardasee.de/sites/default/files/teaserimg/tennis_adobestock_285441870_0.jpeg' , title: 'Tennis', type: 'Sport', id :'Q847', description : 'Voir l historique du tennis au JO'},
-        { imageSrc: 'https://th.bing.com/th/id/OIP.X287QnzDv7AT_1SLpnpb2QHaE8?rs=1&pid=ImgDetMain' , title: 'athlétisme', type: 'Sport', id :'Q542', description : 'Voir l historique de l athètisme au JO'},
-        { imageSrc: 'https://th.bing.com/th/id/OIP.GBa4nRMzIMsdiAKFze3MoAHaF7?rs=1&pid=ImgDetMain' , title: 'basket en fauteuil', type: 'Sport', id :'Q1128216', description : 'Voir l historique du basket fauteuil au JO'},
+        //{ imageSrc: 'https://th.bing.com/th/id/R.a6d0443a66c6d2c474b2e49929fa9127?rik=TVf752Pv%2fcEHaA&riu=http%3a%2f%2fsport24.lefigaro.fr%2fvar%2fplain_site%2fstorage%2fimages%2fnatation%2factualites%2fflorent-manaudou-impressionne-a-indianapolis-976779%2f26369753-1-fre-FR%2fFlorent-Manaudou-impressionne-a-Indianapolis.jpg&ehk=StLg9DNUQBizi4XTkYCqsXuZwubVRH77ww3L6zcfVuk%3d&risl=&pid=ImgRaw&r=0' , title: 'Florent Manaudou', type: 'Athlète', id :'Q137575', description : 'Voir le palmares de Florent Manaudou'},
+        //{ imageSrc: 'https://th.bing.com/th/id/R.015a05314606efc84fde63e8aa8f5e51?rik=Xvin9UHC6RX6mQ&pid=ImgRaw&r=0' , title: 'Laura Manaudou', type: 'Athlète', id :'Q45659', description : 'Voir le palmares de Laura Manaudou'},
+        //{ imageSrc: 'https://th.bing.com/th?id=OIF.ptw9dCIwkJBa2qa%2buJjxVg&rs=1&pid=ImgDetMain' , title: 'Simone Biles', type: 'Athlète', id :'Q7520267', description : 'Voir le palmares de Simone Biles'},
+        //{ imageSrc: 'https://th.bing.com/th/id/OIP.ekg2Z9822n1eCZeXCVGrIgHaE8?rs=1&pid=ImgDetMain' , title: 'Nikola Karabatic', type: 'Athlète', id :'Q157809', description : 'Voir le palmares de Nikola Karabatic'},
+        //{ imageSrc: 'https://th.bing.com/th/id/R.1692f06dcbda11972009a6d402824e39?rik=odcIkiwW70wfPw&pid=ImgRaw&r=0' , title: 'Thierry Omeyer', type: 'Athlète', id :'Q134709', description : 'Voir le palmares de Thierry Omeyer'},
+        //{ imageSrc: 'https://www.gardasee.de/sites/default/files/teaserimg/tennis_adobestock_285441870_0.jpeg' , title: 'Tennis', type: 'Sport', id :'Q847', description : 'Voir l historique du tennis au JO'},
+        //{ imageSrc: 'https://th.bing.com/th/id/OIP.X287QnzDv7AT_1SLpnpb2QHaE8?rs=1&pid=ImgDetMain' , title: 'athlétisme', type: 'Sport', id :'Q542', description : 'Voir l historique de l athètisme au JO'},
+        //{ imageSrc: 'https://th.bing.com/th/id/OIP.GBa4nRMzIMsdiAKFze3MoAHaF7?rs=1&pid=ImgDetMain' , title: 'basket en fauteuil', type: 'Sport', id :'Q1128216', description : 'Voir l historique du basket fauteuil au JO'},
         await createVignetteAthlete('Q3195752'),
         await createVignetteAthlete('Q1189'),
+        await createVignetteAthlete('Q157809'),
+        await createVignetteAthlete('Q7520267'),
+        await createVignettePays('Q742512'),
+        await createVignettePays('Q749175'),
+        await createVignetteAthlete('Q705966'),
+        await createVignetteAthlete('Q1652'),
+        await createVignetteSport('Q847'),
+        await createVignetteSport('Q542'),
+        await createVignetteSport('Q1128216'),
+        await createVignetteOlympicGame('Q995653'),
+        await createVignetteOlympicGame('Q181278'),
+        await createVignetteOlympicGame('Q8613'),
+        await createVignetteOlympicGame('Q8577'),
+        await createVignetteOlympicGame('Q8567'),
+        await createVignetteAthlete('Q39562'),
+        await createVignetteAthlete('Q22102'),
+        await createVignetteAthlete('Q131237'),
+        await createVignetteAthlete('Q216256'),
+        await createVignetteAthlete('Q189408'),
+        await createVignetteAthlete('Q177969'),
+        await createVignetteSport('Q43450'),
+        //await createVignettePays('Q742661'),
 
     ];
       setVignettesData(initialVignettesData);
@@ -148,6 +333,13 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
           onClick={() => setFilter('Athlète')}
         >
           Athlète
+        </div>
+        <div 
+          className={`filter-option ${filter === 'Sport' ? 'filter-option-selected' : ''}`}
+          title="Afficher seulement les sports"
+          onClick={() => setFilter('Sport')}
+        >
+          Sport
         </div>
       </div>
 
