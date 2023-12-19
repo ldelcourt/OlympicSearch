@@ -11,6 +11,7 @@
   width: 300px;
   aspect-ratio: 3/1;
   position: relative;
+  border: 1px solid #ccc;
 }
 
 .vignette-image {

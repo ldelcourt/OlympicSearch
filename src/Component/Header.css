@@ -16,7 +16,7 @@ header img {
     height: auto;
     float: left;
     margin: 0px;
-    margin-right: -50%;
+    /* margin-right: -50%; */
     margin-left: 20px;
     margin-top: 6px;
     transition: transform 0.7s ease; /* Add transition property for smooth transform */
@@ -29,7 +29,7 @@ header img:hover {
 header h1 {
     margin: 0;
     line-height: 70px; /* Adjust the line height to vertically center the title */
-    margin-right: 1000px; /* Add auto margin to push the h1 element to the left */
+     margin-right: 1000px;/* Add auto margin to push the h1 element to the left */
     font-family: Jockey One;
     font-size: 45px;
     transition: color 0.3s ease; /* Add transition property for smooth color change */
