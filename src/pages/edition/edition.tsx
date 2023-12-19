@@ -111,12 +111,17 @@ const Edition = () => {
           <div className="edition-line">
             <h2>Lieu : </h2> {data?.location}, {data?.country}
           </div>
+          {
+            data?.participants_count !== 0 &&
           <div className="edition-line">
-            <h2>Nombre de participants : </h2> {data?.participants_count}
+           <h2>Nombre de participants : </h2> {data?.participants_count}
           </div>
-          <div className="edition-line">
-            <h2>Nombre de nations : </h2> {data?.nations_count}
-          </div>
+          }{
+            data?.nations_count !== 0 &&
+            <div className="edition-line">
+              <h2>Nombre de nations : </h2> {data?.nations_count}
+            </div>
+          }
           <div className="edition-line">
             <h2>Nombre de sports : </h2> {data?.sports_count}
           </div>
