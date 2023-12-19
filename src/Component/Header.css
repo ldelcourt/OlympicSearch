@@ -37,10 +37,33 @@ header h1 {
 }
 
 header h1:hover {
-    color: #bb9001; /* Change the color on hover */
+    animation: fadeColor 4s infinite; /* Add animation effect */
     cursor: pointer;
-    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); /* Add text shadow on hover */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow on hover */
 }
+
+@keyframes fadeColor {
+    0% {
+        color: rgb(255, 255, 255); /* Start with white color */
+    }
+    20% {
+        color: rgb(255, 217, 0); /* Change to yellow color */
+    }
+    40%{
+        color: rgb(174, 12, 12); /* Start with white color */
+    }
+    60% {
+        color: rgb(38, 0, 255); /* Change to yellow color */
+    }
+    80% {
+        color: rgb(21, 139, 80); /* End with black color */
+    }
+    100% {
+        color: rgb(255, 255, 255); /* End with black color */
+    }
+}
+    
+
     
 
 
