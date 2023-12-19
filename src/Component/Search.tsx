@@ -1,11 +1,12 @@
 import { ChangeEvent, useState } from "react";
 import "./Search.css";
-import { VignetteProps } from "../vignette";
+import  { VignetteProps } from "../vignette";
 import { FecthResult, SearchQueryResult, SearchType } from "../interfaces";
 import TableauVignettes from "../tableauVignette";
 
+
 function Search() {
-  //var result =JSON.stringify({ });
+  //Texte saisi par l'utilisateur
   const [texteSaisie, setTexteSaisie] = useState<string>();
 
   //Tableau pour stocker les resultats de la query
@@ -13,26 +14,25 @@ function Search() {
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  /** Requete Wikimedia
-   * Les Requetes doivent rendre des attributs aux noms suivant
-   * @id Id vers la page
-   * @imageSrc Url vers l'image
-   * @title Titre de la vignette
-   * @type Type de la vignette passé en paramètre de fetchData
-   * @description Description de la vignette
-   *
-   */
-  const editionQuery = `
+   /** Requete Wikimedia
+     * Les Requetes doivent rendre des attributs aux noms suivant
+     * @id Id vers la page
+     * @imageSrc Url vers l'image
+     * @title Titre de la vignette
+     * @type Type de la vignette passé en paramètre de fetchData
+     * @description Description de la vignette
+     * 
+     */
+    
+   const editionQuery = `
+ 
    SELECT DISTINCT ?id ?title ?imageSrc ?description
    WHERE {
      ?id wdt:P31 wd:Q159821;
                   rdfs:label ?title;
                    wdt:P17 ?country;
                  schema:description ?description.
-     
-     
-   
-     FILTER((CONTAINS(?title, "${texteSaisie}" )) || (CONTAINS(?description, "${texteSaisie}"))).
+     FILTER((CONTAINS(LCASE(?title), "${texteSaisie?.toLowerCase()}" )) || (CONTAINS(LCASE(?description), "${texteSaisie?.toLowerCase()}"))).
 
      FILTER(LANG(?title) = 'fr').
      FILTER(LANG(?description) = 'fr').
@@ -52,30 +52,41 @@ function Search() {
 
   //Fonctionne bien
   const sportQuery = `
-   SELECT ?title ?id ?imageSrc ?description
+   SELECT DISTINCT ?title ?id ?imageSrc ?description
    WHERE {
      ?id wdt:P31 wd:Q31629;
             rdfs:label ?title;
             p:P279 ?subclass_sport;
             schema:description ?description.
      ?subclass_sport ps:P279 wd:Q212434.
-     FILTER(CONTAINS(?title, "${texteSaisie}") || CONTAINS(?description, "${texteSaisie}")).       
+     FILTER(CONTAINS(lcase(?title), "${texteSaisie?.toLowerCase()}") || CONTAINS(lcase(?description), "${texteSaisie?.toLowerCase()}")).       
       FILTER(LANG(?title) = "fr" && lang(?description) = 'fr').
      OPTIONAL { ?id wdt:P18 ?imageSrc. }   
    }
  `;
-  //Ne fonctionne pas
+  //Fontionne bien
   const athleteQuery = `
-      SELECT ?person ?personLabel ?image ?nature_de_l_élément ?nature_de_l_élémentLabel WHERE {
-        ?person wdt:P31 wd:Q5;
-          rdfs:label "${texteSaisie}"@fr.
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
-        OPTIONAL { ?person wdt:P18 ?image. }
-        OPTIONAL { ?person wdt:P31 ?nature_de_l_élément. }
-      }
+  SELECT DISTINCT ?id ?title ?imageSrc ?description WHERE {
+    ?id wdt:P31 wd:Q5;
+        wdt:P106 ?profession;
+        rdfs:label ?title;
+        wdt:P1344 ?participation;
+        wdt:P569 ?birthDate.
+    ?profession wdt:P279 wd:Q2066131;
+                wdt:P425 ?sport.
+    ?sport wdt:P279 wd:Q212434.
+    ?participation wdt:P31 wd:Q18536594.
+    FILTER(YEAR(?birthDate) > 1960).
+    FILTER(LANG(?title) = 'fr' && 
+          CONTAINS(LCASE(?title), "${texteSaisie?.toLowerCase()}" )).
+    OPTIONAL { ?id wdt:P18 ?imageSrc }
+    OPTIONAL { ?id schema:description ?description. FILTER(LANG(?description) = 'fr'). }
+  }
+LIMIT 5
     `;
 
-  const countryQuery = `
+  //Fonctionne bien 
+    const countryQuery = `
     SELECT distinct ?id ?title ?description ?imageSrc
     WHERE {
         ?temp wdt:P31 wd:Q26213387;
@@ -86,7 +97,7 @@ function Search() {
         
         FILTER(
           LANG(?pageName) = 'fr' && 
-          CONTAINS(?pageName, "${texteSaisie}" )  
+          CONTAINS(LCASE(?pageName), "${texteSaisie?.toLowerCase()}" )  
         ).
     
     OPTIONAL { ?country schema:description ?description }
@@ -103,9 +114,10 @@ function Search() {
   const handleClick = async () => {
     setLoading(true);
     setQueryResult([]);
-    await fetchData(editionQuery, "Edition");
-    await fetchData(sportQuery, "Sport");
-    await fetchData(countryQuery, "Pays");
+    await fetchData(editionQuery, 'Edition');
+    await fetchData(sportQuery, 'Sport');
+    await fetchData(countryQuery, 'Pays');
+    await fetchData(athleteQuery, 'Athlète');
     setLoading(false);
   };
 
@@ -119,11 +131,10 @@ function Search() {
           method: "GET",
         }
       );
-
       if (response.ok) {
         const result: FecthResult<SearchQueryResult> = await response.json();
         const temp: VignetteProps[] = result!.results!.bindings.map((row) => ({
-          description: row.description.value,
+          description: row.description?.value,
           id: row.id.value!.substring(row.id.value!.lastIndexOf("/") + 1),
           imageSrc: row.imageSrc?.value,
           title: row.title.value,
@@ -141,9 +152,9 @@ function Search() {
     }
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setTexteSaisie(event.target.value);
-  };
+const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  setTexteSaisie(event.target.value);
+};
 
   return (
     <>

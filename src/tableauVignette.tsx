@@ -170,7 +170,6 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
             type: 'Athlète',
             description: item.description ? item.description.value : ''
         };
-        console.log(vignetteData);
         return vignetteData;
     } else {
         throw new Error('No data found for this id');
@@ -188,7 +187,6 @@ async function createVignetteOlympicGame(id) {
           type: 'Edition',
           description: item.country ? item.country.value : ''
       };
-      console.log(vignetteData);
       return vignetteData;
   } else {
       throw new Error('No data found for this id');
@@ -206,7 +204,6 @@ async function createVignettePays(id) {
           type: 'Pays',
           description: item.name ? item.name.value : ''
       };
-      console.log(vignetteData);
       return vignetteData;
   } else {
       throw new Error('No data found for this id');
@@ -224,7 +221,6 @@ async function createVignetteSport(id) {
           type: 'Sport',
           description: item.description ? item.description.value : ''
       };
-      console.log(vignetteData);
       return vignetteData;
   } else {
       throw new Error('No data found for this id');
