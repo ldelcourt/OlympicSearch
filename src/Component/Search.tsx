@@ -1,29 +1,28 @@
 import { ChangeEvent, useState } from "react";
 import "./Search.css";
-import Vignette, { VignetteProps } from "../vignette";
-import { useEffect } from "react";
-import { json, useParams } from "react-router-dom";
+import { VignetteProps } from "../vignette";
 import { FecthResult, SearchQueryResult, SearchType } from "../interfaces";
 import TableauVignettes from "../tableauVignette";
-
 
 function Search() {
   //var result =JSON.stringify({ });
   const [texteSaisie, setTexteSaisie] = useState<string>();
 
   //Tableau pour stocker les resultats de la query
-  const [queryResult, setQueryResult] =useState<VignetteProps[]>([]);
+  const [queryResult, setQueryResult] = useState<VignetteProps[]>([]);
 
-   /** Requete Wikimedia
-     * Les Requetes doivent rendre des attributs aux noms suivant
-     * @id Id vers la page
-     * @imageSrc Url vers l'image
-     * @title Titre de la vignette
-     * @type Type de la vignette passé en paramètre de fetchData
-     * @description Description de la vignette
-     * 
-     */
-   const editionQuery = `
+  const [loading, setLoading] = useState<boolean>(false);
+
+  /** Requete Wikimedia
+   * Les Requetes doivent rendre des attributs aux noms suivant
+   * @id Id vers la page
+   * @imageSrc Url vers l'image
+   * @title Titre de la vignette
+   * @type Type de la vignette passé en paramètre de fetchData
+   * @description Description de la vignette
+   *
+   */
+  const editionQuery = `
    SELECT DISTINCT ?id ?title ?imageSrc ?description
    WHERE {
      ?id wdt:P31 wd:Q159821;
@@ -51,8 +50,8 @@ function Search() {
    }
    `;
 
-   //Fonctionne bien
-   const sportQuery = `
+  //Fonctionne bien
+  const sportQuery = `
    SELECT ?title ?id ?imageSrc ?description
    WHERE {
      ?id wdt:P31 wd:Q31629;
@@ -76,7 +75,7 @@ function Search() {
       }
     `;
 
-    const countryQuery = `
+  const countryQuery = `
     SELECT distinct ?id ?title ?description ?imageSrc
     WHERE {
         ?temp wdt:P31 wd:Q26213387;
@@ -101,86 +100,82 @@ function Search() {
     } 
   `;
 
-
   const handleClick = async () => {
+    setLoading(true);
     setQueryResult([]);
-    await fetchData(editionQuery, 'Edition');
-    await fetchData(sportQuery, 'Sport');
-    await fetchData(countryQuery, 'Pays');
+    await fetchData(editionQuery, "Edition");
+    await fetchData(sportQuery, "Sport");
+    await fetchData(countryQuery, "Pays");
+    setLoading(false);
   };
 
-
-  
   const fetchData = async (query: string, typeQuery: SearchType) => {
     const base_endpoint = "https://query.wikidata.org/sparql";
-    
+
     try {
-        const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
-            method: "GET",
-        });
-
-        if (response.ok) {
-            const result:FecthResult<SearchQueryResult> = await response.json();
-            const temp: VignetteProps[] = result.results.bindings.map((row) => ({
-              description: row.description.value,
-              id: row.id.value!.substring(row.id.value!.lastIndexOf('/') + 1), 
-              imageSrc: row.imageSrc?.value,
-              title: row.title.value,
-              type: typeQuery,
-            }));
-            setQueryResult((prevQueryResult) => {
-              return [...prevQueryResult, ...temp];
-            });          
-            console.log({ result });
-        } else {
-            console.error("Erreur lors de la requête SPARQL");
+      const response = await fetch(
+        `${base_endpoint}?query=${encodeURIComponent(query)}&format=json`,
+        {
+          method: "GET",
         }
+      );
+
+      if (response.ok) {
+        const result: FecthResult<SearchQueryResult> = await response.json();
+        const temp: VignetteProps[] = result!.results!.bindings.map((row) => ({
+          description: row.description.value,
+          id: row.id.value!.substring(row.id.value!.lastIndexOf("/") + 1),
+          imageSrc: row.imageSrc?.value,
+          title: row.title.value,
+          type: typeQuery,
+        }));
+        setQueryResult((prevQueryResult) => {
+          return [...prevQueryResult, ...temp];
+        });
+        console.log({ result });
+      } else {
+        console.error("Erreur lors de la requête SPARQL");
+      }
     } catch (error) {
-        console.error("Erreur réseau :", error);
+      console.error("Erreur réseau :", error);
     }
-};
+  };
 
-
-
-const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-  setTexteSaisie(event.target.value);
-  
-  
-  
-};
-
-
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setTexteSaisie(event.target.value);
+  };
 
   return (
     <>
-    <div className="global">
-      <br />
-      <div className="search-container">
-        <input
-          type="text"
-          id="search"
-          value={texteSaisie}
-          onChange={handleChange}
-          placeholder="Rechercher..."
-          onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
-            if(event.key === "Enter"){
-              handleClick()
-            } 
-          }}
-        />
-        <button onClick={handleClick} type="submit" id="search-button">
-          <img
-            src="https://cdn-icons-png.flaticon.com/256/3917/3917132.png"
-            alt="Rechercher"
-          ></img>
-        </button>
+      <div className="global">
+        <br />
+        <div className="search-container">
+          <input
+            type="text"
+            id="search"
+            value={texteSaisie}
+            onChange={handleChange}
+            placeholder="Rechercher..."
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === "Enter") {
+                handleClick();
+              }
+            }}
+          />
+          <button onClick={handleClick} type="submit" id="search-button">
+            <img
+              src="https://cdn-icons-png.flaticon.com/256/3917/3917132.png"
+              alt="Rechercher"
+            ></img>
+          </button>
+        </div>
       </div>
-
-    </div>
-      <TableauVignettes initialVignettes={queryResult} />
+      {
+        loading ? 
+        <div className="loader"></div> :
+        <TableauVignettes initialVignettes={queryResult} />
+      }
     </>
   );
-
-
 }
 export default Search;

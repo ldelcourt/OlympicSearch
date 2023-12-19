@@ -24,6 +24,7 @@ interface AthleteQueryResult {
 function Sport() {
 
     const naviguate = useNavigate();
+    const [loading, setLoading] = useState<boolean>(false);
 
     const { idSport } = useParams<{ idSport?: string }>();
     const [sportData, setSportData] = useState<FecthResult<SportQueryResult>>();
@@ -94,22 +95,27 @@ function Sport() {
         </li>
       );
 
+      if (loading) {
+        return <div className="loader"></div>;
+      }
     return (
-        <div>
-            <div className="container">
-                <h1 className="p">
-                    <strong>Discipline :</strong> {sportData?.results?.bindings[0]?.name?.value}
-                    <br />
-                    <strong>Pays d'origine :</strong> {sportData?.results?.bindings[0]?.paysLabel?.value}     
-                    <br />
-                    <strong>Description :</strong> {sportData?.results?.bindings[0]?.description?.value}        
-                </h1>
-
-                <h2 className="image">
-                    <img src={sportData?.results?.bindings[0]?.icon?.value} />
-                </h2>
+        <div className="sport-container">
+            <h1>{sportData?.results?.bindings[0]?.name?.value.charAt(0).toUpperCase()}{sportData?.results?.bindings[0]?.name?.value.slice(1).toLowerCase()}</h1>
+            <div className="sport-hero">
+                <div className="sport-information">
+                    {
+                        sportData?.results?.bindings[0]?.paysLabel &&
+                    <div className="sport-line">
+                        <h2> Pays d'origine : </h2> {sportData?.results?.bindings[0]?.paysLabel?.value}
+                    </div>
+                    }
+                    <div className="sport-line">
+                        <h2> Description : </h2> {sportData?.results?.bindings[0]?.description?.value}     
+                    </div>
+                </div>
+                <img src={sportData?.results?.bindings[0]?.icon?.value} />
             </div>
-            <div className='edition-sports'>
+            <div className='sport-athletes'>
                 <h2>Athlètes notables: </h2>
                 {
                     athleteData?.results?.bindings && athleteData?.results?.bindings?.length > 0 ? (

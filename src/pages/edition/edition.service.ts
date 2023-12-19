@@ -1,14 +1,14 @@
 export type EditionData = {
   edition?: string;
   location?: string;
-  country: string;
-  logo_url: string;
-  second_logo_url: string;
-  participants_count: number;
-  nations_count: number;
-  sports_count: number;
-  start_date: string;
-  end_date: string;
+  country?: string;
+  logo_url?: string;
+  second_logo_url?: string;
+  participants_count?: number;
+  nations_count?: number;
+  sports_count?:number;
+  start_date?: string;
+  end_date?: string;
 };
 
 export type Ranking = {
@@ -35,7 +35,6 @@ export const fetchEditionData = async (
   wd:${edition} wdt:P18 ?secondLogoUrl.
   `;
 
-
   const location_query = `
     wd:${edition} p:P276 ?l.
     ?l ps:P276 ?locationPage.
@@ -44,9 +43,12 @@ export const fetchEditionData = async (
     `;
 
   const counts_query = `
-    wd:${edition} p:P1132 ?n.
-    ?n ps:P1132 ?count.
-    BIND(xsd:integer(?count) AS ?countValue).
+    wd:${edition} p:P1132 ?nations.
+    ?nations pq:P642 wd:Q26213387.
+    ?nations ps:P1132 ?nations_count.
+    wd:${edition} p:P1132 ?participants.
+    ?participants pq:P642 wd:Q11292782.
+    ?participants ps:P1132 ?participants_count.
     `;
 
   const country_query = `
@@ -67,7 +69,7 @@ export const fetchEditionData = async (
     `;
 
   const query = `
-    SELECT ?edition ?location ?country ?logoUrl ?secondLogoUrl ?countValue ?start_time ?end_time
+    SELECT ?edition ?location ?country ?logoUrl ?secondLogoUrl ?nations_count ?participants_count ?start_time ?end_time
     WHERE {
       ${edition_query}
       OPTIONAL{
@@ -121,17 +123,6 @@ export const fetchEditionData = async (
       const res = await response.json();
       console.log({res});
       if (res.results.bindings?.length) {
-        let nations_count = +res.results.bindings[0]?.countValue.value;
-        for (const bind of res.results.bindings) {
-          if (+bind?.countValue.value < nations_count)
-            nations_count = +bind?.countValue.value;
-        }
-
-        let participants_count = +res.results.bindings[0].countValue.value;
-        for (const bind of res.results.bindings) {
-          if (+bind?.countValue.value > participants_count)
-            participants_count = +bind?.countValue.value;
-        }
 
         let sports_count = 0;
         if (sports_response.ok) {
@@ -146,8 +137,8 @@ export const fetchEditionData = async (
           second_logo_url: data?.secondLogoUrl?.value,
           location: data?.location.value,
           country: data?.country?.value,
-          participants_count,
-          nations_count,
+          participants_count: +(data?.participants_count?.value ?? 0),
+          nations_count: +(data?.nations_count?.value ?? 0),
           sports_count,
           start_date: data?.start_time.value
             ? parseDateToFrenchFormat(data?.start_time.value)
@@ -171,7 +162,7 @@ export const fetchSports = async (
   const base_endpoint = "https://query.wikidata.org/sparql";
 
   const query = `
-    SELECT ?sport_label
+    SELECT ?sport_label ?sport
     WHERE {
       wd:${edition} p:P527 ?sp.
       ?sp ps:P527 ?sports_page.
@@ -193,11 +184,15 @@ export const fetchSports = async (
       const res = await response.json();
       if (res.results.bindings?.length) {
         const data: string[] = res.results.bindings.map((res: any) => {
-          return (
+          return ( {
+            name : 
             res.sport_label.value.charAt(0).toUpperCase() +
-            res.sport_label.value.slice(1).toLowerCase()
+            res.sport_label.value.slice(1).toLowerCase(),
+            id: res.sport.value.split("/")[res.sport.value.split("/").length - 1],
+          }
           );
         });
+        console.log(data);
         return data;
       }
     } else {
