@@ -29,6 +29,8 @@ function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
     } else if (type === 'Edition') {
       // Lien par défaut si le type n'est pas géré
       return `/edition/${id}`;
+    } else if (type === 'Sport') {
+      return `/sport/${id}`;
     } else {
       return `/?${params.toString()}`
     }

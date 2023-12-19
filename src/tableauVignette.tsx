@@ -64,16 +64,21 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
   const init = async () => {
     if (initialVignettes?.length == 0) {
       const initialVignettesData = [
-        { imageSrc: 'https://th.bing.com/th/id/R.a6d0443a66c6d2c474b2e49929fa9127?rik=TVf752Pv%2fcEHaA&riu=http%3a%2f%2fsport24.lefigaro.fr%2fvar%2fplain_site%2fstorage%2fimages%2fnatation%2factualites%2fflorent-manaudou-impressionne-a-indianapolis-976779%2f26369753-1-fre-FR%2fFlorent-Manaudou-impressionne-a-Indianapolis.jpg&ehk=StLg9DNUQBizi4XTkYCqsXuZwubVRH77ww3L6zcfVuk%3d&risl=&pid=ImgRaw&r=0' , title: 'Florent Manaudou', type: 'Athlète', id :'Q137575', description : 'Voir le palmares de Florent Manaudou'},
-        { imageSrc: 'https://th.bing.com/th/id/R.015a05314606efc84fde63e8aa8f5e51?rik=Xvin9UHC6RX6mQ&pid=ImgRaw&r=0' , title: 'Laura Manaudou', type: 'Athlète', id :'Q45659', description : 'Voir le palmares de Laura Manaudou'},
-        { imageSrc: 'https://th.bing.com/th?id=OIF.ptw9dCIwkJBa2qa%2buJjxVg&rs=1&pid=ImgDetMain' , title: 'Simone Biles', type: 'Athlète', id :'Q7520267', description : 'Voir le palmares de Simone Biles'},
-        { imageSrc: 'https://th.bing.com/th/id/OIP.ekg2Z9822n1eCZeXCVGrIgHaE8?rs=1&pid=ImgDetMain' , title: 'Nikola Karabatic', type: 'Athlète', id :'Q157809', description : 'Voir le palmares de Nikola Karabatic'},
-        { imageSrc: 'https://th.bing.com/th/id/R.1692f06dcbda11972009a6d402824e39?rik=odcIkiwW70wfPw&pid=ImgRaw&r=0' , title: 'Thierry Omeyer', type: 'Athlète', id :'Q134709', description : 'Voir le palmares de Thierry Omeyer'},
+        //{ imageSrc: 'https://th.bing.com/th/id/R.a6d0443a66c6d2c474b2e49929fa9127?rik=TVf752Pv%2fcEHaA&riu=http%3a%2f%2fsport24.lefigaro.fr%2fvar%2fplain_site%2fstorage%2fimages%2fnatation%2factualites%2fflorent-manaudou-impressionne-a-indianapolis-976779%2f26369753-1-fre-FR%2fFlorent-Manaudou-impressionne-a-Indianapolis.jpg&ehk=StLg9DNUQBizi4XTkYCqsXuZwubVRH77ww3L6zcfVuk%3d&risl=&pid=ImgRaw&r=0' , title: 'Florent Manaudou', type: 'Athlète', id :'Q137575', description : 'Voir le palmares de Florent Manaudou'},
+        //{ imageSrc: 'https://th.bing.com/th/id/R.015a05314606efc84fde63e8aa8f5e51?rik=Xvin9UHC6RX6mQ&pid=ImgRaw&r=0' , title: 'Laura Manaudou', type: 'Athlète', id :'Q45659', description : 'Voir le palmares de Laura Manaudou'},
+        //{ imageSrc: 'https://th.bing.com/th?id=OIF.ptw9dCIwkJBa2qa%2buJjxVg&rs=1&pid=ImgDetMain' , title: 'Simone Biles', type: 'Athlète', id :'Q7520267', description : 'Voir le palmares de Simone Biles'},
+        //{ imageSrc: 'https://th.bing.com/th/id/OIP.ekg2Z9822n1eCZeXCVGrIgHaE8?rs=1&pid=ImgDetMain' , title: 'Nikola Karabatic', type: 'Athlète', id :'Q157809', description : 'Voir le palmares de Nikola Karabatic'},
+        //{ imageSrc: 'https://th.bing.com/th/id/R.1692f06dcbda11972009a6d402824e39?rik=odcIkiwW70wfPw&pid=ImgRaw&r=0' , title: 'Thierry Omeyer', type: 'Athlète', id :'Q134709', description : 'Voir le palmares de Thierry Omeyer'},
         { imageSrc: 'https://www.gardasee.de/sites/default/files/teaserimg/tennis_adobestock_285441870_0.jpeg' , title: 'Tennis', type: 'Sport', id :'Q847', description : 'Voir l historique du tennis au JO'},
         { imageSrc: 'https://th.bing.com/th/id/OIP.X287QnzDv7AT_1SLpnpb2QHaE8?rs=1&pid=ImgDetMain' , title: 'athlétisme', type: 'Sport', id :'Q542', description : 'Voir l historique de l athètisme au JO'},
         { imageSrc: 'https://th.bing.com/th/id/OIP.GBa4nRMzIMsdiAKFze3MoAHaF7?rs=1&pid=ImgDetMain' , title: 'basket en fauteuil', type: 'Sport', id :'Q1128216', description : 'Voir l historique du basket fauteuil au JO'},
         await createVignetteAthlete('Q3195752'),
         await createVignetteAthlete('Q1189'),
+        await createVignetteAthlete('Q45659'),
+        await createVignetteAthlete('Q137575'),
+        await createVignetteAthlete('Q7520267'),
+        await createVignetteAthlete('Q157809'),
+        await createVignetteAthlete('Q134709'),
 
     ];
       setVignettesData(initialVignettesData);
@@ -149,8 +154,16 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
         >
           Athlète
         </div>
+        <div 
+          className={`filter-option ${filter === 'Sport' ? 'filter-option-selected' : ''}`}
+          title="Afficher seulement les sports"
+          onClick={() => setFilter('Sport')}
+        >
+          Sport
+        </div>
+        
       </div>
-
+      
       <div className="tableau-vignettes">
         {filteredVignettesData.map((vignetteData) => (
           <Vignette key={vignetteData.id} {...vignetteData} />
