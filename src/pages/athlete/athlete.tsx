@@ -36,6 +36,8 @@ const CountGoldMedals = (athleteData: any) => {
         const rankingLabel = binding.ranking?.value;
         if (competitionLabel && competitionLabel.toLowerCase().includes("olymp") && rankingLabel === '1') {
             count++;
+        }else if(medalsLabel && medalsLabel.includes("or ol")){
+            count++;
         }
     });
     return count;
@@ -49,6 +51,8 @@ const CountSilverMedals = (athleteData: any) => {
         const rankingLabel = binding.ranking?.value;
         if (competitionLabel && competitionLabel.toLowerCase().includes("olymp") && rankingLabel === '2') {
             count++;
+        }else if(medalsLabel && medalsLabel.includes("argent ol")){
+            count++;
         }
     });
     return count;
@@ -61,6 +65,8 @@ const CountBronzeMedals = (athleteData: any) => {
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
         if (competitionLabel && competitionLabel.toLowerCase().includes("olymp") && rankingLabel === '3') {
+            count++;
+        }else if(medalsLabel && medalsLabel.includes("bronze ol")){
             count++;
         }
     });
@@ -107,11 +113,13 @@ function Athlete() {
             OPTIONAL { ?participation pq:P805 ?epreuve. }
 
             OPTIONAL { ?competitions wdt:P31 ?instanceOfCompetitions. }
-            OPTIONAL { ?competitions wdt:P361 ?sportInEdition. }
             
 
             OPTIONAL { ?participation pq:P166 ?medals. }
             OPTIONAL { ?participation pq:P1352 ?ranking. }
+
+
+
             OPTIONAL { ?person schema:description ?description. FILTER(LANG(?description) = "fr") }
             SERVICE wikibase:label { bd:serviceParam wikibase:language "fr". }
             OPTIONAL { ?person wdt:P18 ?image. }
@@ -156,20 +164,13 @@ function Athlete() {
                 method: "GET",
             });
 
-            const response2 = await fetch(`${base_endpoint}?query=${encodeURIComponent(countryQuery)}&format=json`, {
-                method: "GET",
-            });
             
             if (response.ok) {
                 const result = await response.json();
                 console.log({ result });
                 setAthleteData(result);
             }
-            if (response2.ok) {
-                const result = await response.json();
-                console.log({ result });
-                setCountryData(result);
-            }
+
         } catch (error) {
             console.error(error);
         }
@@ -195,6 +196,7 @@ function Athlete() {
         console.log(countryForSport);
     }
 
+    const sport = athleteData?.results?.bindings[0]?.sport?.value;
 
     return (
         <div>
@@ -214,7 +216,11 @@ function Athlete() {
                     <br />
                     <strong>Description :</strong> {athleteData?.results?.bindings[0]?.description?.value}
                     <br />
-                    <strong>Disciplines :</strong> {athleteData?.results?.bindings[0]?.sportLabel?.value}
+                    <strong>Disciplines : </strong> 
+                    <span className="link" onClick={() => naviguate(`/sport/${sport.substring(sport.lastIndexOf('/') + 1)}`)}>
+                                    {athleteData?.results?.bindings[0]?.sportLabel?.value
+                                    }
+                                </span>
                     <br />
                     <strong>Taille :</strong> {athleteData?.results?.bindings[0]?.height?.value} m  
                     {athleteData?.results?.bindings[0]?.weight?.value && <span><strong>  Poids :</strong> {athleteData?.results?.bindings[0]?.weight?.value} kg</span>}
@@ -246,6 +252,7 @@ function Athlete() {
                     const instanceOfEditionLabel = binding.instanceOfEditionLabel?.value;
                     const instanceOfFurtherEditionLabel = binding.instanceOfFurtherEditionLabel?.value;
                     const epreuveLabel = binding.epreuveLabel?.value;
+                    const awardLabel = binding.awardLabel?.value;
                     if (competitionLabel && competitionLabel.toLowerCase().includes("olymp")) {
                         return (
                             <p key={i}>
@@ -266,6 +273,10 @@ function Athlete() {
                                     {instanceOfFurtherEditionLabel === "Jeux olympiques d’été" && <strong>2 {furtherEdition} </strong>} 
 
                                 </span>
+                                {(!rankingLabel && medalsLabel && medalsLabel.includes("or")) && <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gold_medal_olympic.svg/330px-Gold_medal_olympic.svg.png" alt="Gold Medal" />}  
+                                {(!rankingLabel && medalsLabel && medalsLabel.includes("argent")) && <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Silver Medal" />}
+                                {(!rankingLabel && medalsLabel && medalsLabel.includes("bronze")) && <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/330px-Bronze_medal_olympic.svg.png" alt="Bronze Medal" />}
+
                                 {instanceOfCompetitionsLabel !== "Jeux olympiques d’été" && <span>{competitionLabel}</span>}
                                 {epreuveLabel && <span> ({epreuveLabel})</span>} 
                             </p>    
