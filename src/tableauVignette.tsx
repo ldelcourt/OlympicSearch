@@ -281,6 +281,13 @@ async function createVignettePays(id) {
         >
           Athlète
         </div>
+        <div 
+          className={`filter-option ${filter === 'Sport' ? 'filter-option-selected' : ''}`}
+          title="Afficher seulement les sports"
+          onClick={() => setFilter('Sport')}
+        >
+          Sport
+        </div>
       </div>
 
       <div className="tableau-vignettes">
