@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import './athlete.css';
+
 /*
 const formatNomPrenom = (nomPrenom: string): string => {
     // Divisez la chaîne en utilisant "_" comme séparateur
@@ -22,6 +23,8 @@ const formatNomPrenom = (nomPrenom: string): string => {
         return nomPrenom;
     }
 };*/
+
+let test = 0;
 
 const CountGoldMedals = (data: any) => {
     let count = 0;
@@ -64,16 +67,21 @@ const CountBronzeMedals = (data: any) => {
 
 
 function Athlete() {
-
-    const {idParam} = useParams<{idParam: string}>(); // Récupère l'identifiant de l'athlète dans l'URL
+    const naviguate = useNavigate();
+    const { idParam } = useParams<{ idParam: string }>(); // Récupère l'identifiant de l'athlète dans l'URL
     const [data, setData] = useState<any>();
 
     const fetchData = async () => {
         const base_endpoint = "https://query.wikidata.org/sparql";
         const query = `
-        SELECT ?birthdate ?name ?nat ?gender ?birthplace ?birthplaceLabel ?image ?competitions ?competitionsLabel ?birthCountry ?birthCountryLabel
+        SELECT DISTINCT ?birthdate ?name ?nat ?gender ?birthplace ?birthplaceLabel ?image ?competitions ?competitionsLabel ?birthCountry ?birthCountryLabel
         ?medals ?medalsLabel ?medalImage ?ranking ?sport ?sportLabel ?birthCountryImage ?description ?titre
         ?height ?weight ?countryForSport ?countryForSportLabel ?countryForSportImage ?countryOfCitizenship ?countryOfCitizenshipLabel ?countryOfCitizenshipImage
+        ?instanceOfCompetitions ?instanceOfCompetitionsLabel 
+        ?sportInEdition ?OlympicEdition ?OlympicEditionLabel ?FurtherEdition ?FurtherEditionLabel
+        ?instanceOfEdition ?instanceOfEditionLabel ?instanceOfFurtherEdition ?instanceOfFurtherEditionLabel
+
+    
         WHERE {
             BIND(wd:${idParam} AS ?person)
             OPTIONAL { ?person rdfs:label ?titre. FILTER(LANG(?titre) = "fr") }
@@ -85,6 +93,12 @@ function Athlete() {
             OPTIONAL { ?person wdt:P641 ?sport. }
             OPTIONAL { ?person p:P1344 ?participation. }
             OPTIONAL { ?participation ps:P1344 ?competitions. }
+            OPTIONAL { ?competitions wdt:P31 ?instanceOfCompetitions. }
+            OPTIONAL { ?competitions wdt:P361 ?sportInEdition. }
+            
+
+
+
             OPTIONAL { ?participation pq:P166 ?medals. }
             OPTIONAL { ?participation pq:P1352 ?ranking. }
             OPTIONAL { ?person schema:description ?description. FILTER(LANG(?description) = "fr") }
@@ -94,10 +108,13 @@ function Athlete() {
             OPTIONAL { ?person wdt:P2067 ?weight. }
             OPTIONAL { ?person wdt:P27 ?countryOfCitizenship. }
             OPTIONAL { ?countryOfCitizenship wdt:P41 ?countryOfCitizenshipImage. }
+            OPTIONAL { ?person wdt:P1532 ?countryForSport. 
+                OPTIONAL { ?countryForSport wdt:P41 ?countryForSportImage. }
+            } 
         }
+        
+        
         `;
-
-
 
 
         try {
@@ -108,13 +125,19 @@ function Athlete() {
             if (response.ok) {
                 const result = await response.json();
                 console.log({ result });
+
+                const competitions = result?.results?.bindings?.[0]?.competitions?.value;
+                if (competitions === "summer olympic games") {
+                    test = 2;
+                }
+
                 setData(result);
-            } else {
-                console.error("Erreur lors de la requête SPARQL");
             }
         } catch (error) {
-            console.error("Erreur réseau :", error);
+            console.error(error);
         }
+
+
 
     };
 
@@ -129,13 +152,20 @@ function Athlete() {
         return formattedDate;
     };
 
+
+    const countryForSport = data?.results?.bindings[0]?.countryForSport?.value;
+    if(countryForSport !== undefined ){
+        console.log(countryForSport);
+    }
+
+
     return (
         <div>
             <div className="containerr">
                 <h1 className="pp">
                     <strong>Nom :</strong> {data?.results?.bindings[0]?.titre?.value}
                     <br />
-                    <strong>Nation représentée :</strong> {data?.results?.bindings[0]?.countryOfCitizenshipLabel?.value} {data?.results?.bindings[0]?.countryOfCitizenshipImage?.value && <img className="flagg" src={data?.results?.bindings[0]?.countryOfCitizenshipImage?.value} />}
+                    <strong>Nation représentée :  {data?.results?.bindings[0]?.countryForSportLabel?.value}</strong> {data?.results?.bindings[0]?.countryForSportImage?.value && <img className="flagg" src={data?.results?.bindings[0]?.countryForSportImage?.value} />} {data?.results?.bindings[0]?.countryForSportLabel ===undefined && <strong> {data?.results?.bindings[0]?.countryOfCitizenshipLabel?.value} {data?.results?.bindings[0]?.countryOfCitizenshipImage?.value && <img className="flagg" src={data?.results?.bindings[0]?.countryOfCitizenshipImage?.value} />}</strong>}
                     <br />
                     <br />
                     <strong>Date de naissance :</strong> {data?.results?.bindings[0]?.birthdate?.value && formatDate(data?.results?.bindings[0]?.birthdate?.value)} (Âge : {data?.results?.bindings[0]?.birthdate?.value && Math.floor((new Date().getTime() - new Date(data?.results?.bindings[0]?.birthdate?.value).getTime()) / (1000 * 3600 * 24 * 365.25))} ans)
@@ -146,9 +176,9 @@ function Athlete() {
                     <br />
                     <strong>Description :</strong> {data?.results?.bindings[0]?.description?.value}
                     <br />
-                    <strong>Disciplines :</strong> {data?.results?.bindings[0]?.sportLabel?.value}    
+                    <strong>Disciplines :</strong> {data?.results?.bindings[0]?.sportLabel?.value}
                     <br />
-                    <strong>Taille :</strong> {data?.results?.bindings[0]?.height?.value} m  <strong>  Poids :</strong> {data?.results?.bindings[0]?.weight?.value} kg                
+                    <strong>Taille :</strong> {data?.results?.bindings[0]?.height?.value} m  <strong>  Poids :</strong> {data?.results?.bindings[0]?.weight?.value} kg
                 </h1>
 
                 <h2 className="imagee">
@@ -157,17 +187,23 @@ function Athlete() {
 
             </div>
             <h3 className="compett">
-                <strong>Palmarès Olympique :</strong> 
+                <strong>Palmarès Olympique :</strong>
                 <br />
                 Total : <strong> {CountGoldMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Gold_medal_olympic.svg/330px-Gold_medal_olympic.svg.png" alt="Gold Medal" />
-                 {CountSilverMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Silver Medal" />
-                 {CountBronzeMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/330px-Bronze_medal_olympic.svg.png" alt="Bronze Medal" />
-                 </strong>
-
+                    {CountSilverMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Silver Medal" />
+                    {CountBronzeMedals(data)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/330px-Bronze_medal_olympic.svg.png" alt="Bronze Medal" />
+                </strong>
+                
                 {data?.results?.bindings.map((binding: any, i: number) => {
                     const competitionLabel = binding.competitionsLabel?.value;
+                    const competition = binding.competitions?.value;
                     const medalsLabel = binding.medalsLabel?.value;
                     const rankingLabel = binding.ranking?.value;
+                    const instanceOfCompetitionsLabel = binding.instanceOfCompetitionsLabel?.value;
+                    const edition = binding.OlympicEdition?.value;
+                    const furtherEdition= binding.FurtherEdition?.value;
+                    const instanceOfEditionLabel = binding.instanceOfEditionLabel?.value;
+                    const instanceOfFurtherEditionLabel = binding.instanceOfFurtherEditionLabel?.value;
                     if (competitionLabel && competitionLabel.toLowerCase().includes("olymp")) {
                         return (
                             <p key={i}>
@@ -176,7 +212,20 @@ function Athlete() {
                                 {rankingLabel === '2' && <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Silver_medal_olympic.svg/330px-Silver_medal_olympic.svg.png" alt="Silver Medal" />}
                                 {rankingLabel === '3' && <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/330px-Bronze_medal_olympic.svg.png" alt="Bronze Medal" />}
                                 {rankingLabel && parseInt(rankingLabel) > 3 && <strong>  {rankingLabel}ème </strong>}
-                                {competitionLabel}
+                                {instanceOfCompetitionsLabel === "Jeux olympiques d’été" && 
+                                <span className="link" onClick={() => naviguate(`/edition/${competition.substring(competition.lastIndexOf('/') + 1)}`)}>
+                                    {competitionLabel
+                                    }
+                                </span>
+                                }
+                                <span> 
+                                    
+                                    {instanceOfEditionLabel === "Jeux olympiques d’été" && <strong>1 {edition} </strong>}
+                                    {instanceOfFurtherEditionLabel === "Jeux olympiques d’été" && <strong>2 {furtherEdition} </strong>} 
+
+                                </span>
+                                {instanceOfCompetitionsLabel !== "Jeux olympiques d’été" && <span>{competitionLabel}</span>}
+                                    
                             </p>
                         );
                     }
