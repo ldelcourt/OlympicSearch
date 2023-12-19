@@ -1,45 +1,56 @@
-body {
+
+.sport-container h1{
+  font-size: 48px;
+  text-align: center;
+}
+.sport-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: column;
+  margin: 20px 0; 
+  gap: 20px;
+
+}
+
+.sport-hero {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100vw;
+  margin: auto;
+
+  img{
+    width: calc(211px * 1.8);
+    height: 211px;
+    padding: 0 12px;
     margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    /* Hide horizontal scrollbar */
+  }
 }
 
-.blue-header {
-    box-sizing: border-box;
-    /* Include padding and border in element's total width */
-    background-color: rgb(4, 4, 155);
-    background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Olympic_rings_without_rims.svg/513px-Olympic_rings_without_rims.svg.png");
-    background-repeat: no-repeat;
-    background-position: left;
-    background-size: auto 70px;
-    /* Largeur automatique et hauteur de 75px */
-    background-position-x: 10px;
-    /* Positionnement à 10px depuis la gauche */
-    padding: 10px;
-    color: white;
-    font-style: italic;
-    font-size: 60px;
-    height: 100px;
-    padding-left: 200px;
-    /* Adjust the value as needed */
+.sport-information {
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px  16px;
+  border-radius: 8px;
+  height: fit-content 
 }
 
+.sport-line {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  font-size: 18px;
+  width: fit-content;
 
-h1 {
+  h2{
+    font-size: 20px;
     margin: 0;
-}
-
-
-
-.container {
-    display: flex;
-    /* Use flexbox */
-    align-items: center;
-    justify-content: left;
-    margin-left: 70px;
-    margin-top: 40px;
-
+  }
 }
 
 .p {
@@ -80,21 +91,40 @@ h1 {
 
 }
 
-.medaille{
-    height: 40px;
-    width: auto;
-    margin-left: 10px;
-    margin-right: 10px;
-    position: relative;
-    transform: translateY(8px);
-}
-
-.flag{
-    height: 30px;
-    width: auto;
-    margin-left: 10px;
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.25);
-    margin-right: 10px;
-    position: relative;
-    transform: translateY(8px);
-}
+  
+  .sport-athletes{
+    background-color: #FFF;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    margin: auto;
+    padding: 16px  16px;    
+    border-radius: 8px;
+    height: fit-content;
+    width: calc(211px * 1.8 + 432px);
+  }
+  
+  .sport-athletes h2{
+    font-size: 20px;
+    margin: 0;
+  }
+  
+  .sport-athletes ul{
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+  }
+  
+  .sport-athletes li{
+    font-size: 18px;
+    letter-spacing: 0.05rem;
+  }
+  
+  .sport-athletes li:last-child span{
+    display: none;
+  }

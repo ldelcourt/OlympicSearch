@@ -96,3 +96,13 @@ h6 {
     position: relative;
     transform: translateY(8px);
 }
+
+.link{
+    text-decoration: underline;
+    color: black;
+}
+
+.link:hover{
+    color: #FFC000;
+    cursor: pointer;
+}

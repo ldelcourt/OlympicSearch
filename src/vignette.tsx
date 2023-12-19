@@ -21,18 +21,17 @@ function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
   params.append('type', type);
 
   const getLinkBasedOnType = (): string => {
-    // Ajoutez des conditions pour déterminer le lien en fonction du type
-    if (type === 'Athlète') {
-      return `/athlete/${id}`;
-    } else if (type === 'Pays') {
-      return `/pays/${id}`;
-    } else if (type === 'Edition') {
-      // Lien par défaut si le type n'est pas géré
-      return `/edition/${id}`;
-    } else if (type === 'Sport') {
-      return `/sport/${id}`;
-    } else {
-      return `/?${params.toString()}`
+    switch (type) {
+      case 'Athlète':
+        return `/athlete/${id}`;
+      case 'Sport':
+        return `/sport/${id}`
+      case 'Pays':
+        return `/pays/${id}`;
+      case 'Edition':
+        return `/edition/${id}`;
+      default:
+        return '/';
     }
   };
 

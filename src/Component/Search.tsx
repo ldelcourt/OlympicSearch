@@ -1,51 +1,29 @@
 import { ChangeEvent, useState } from "react";
 import "./Search.css";
-import Vignette, { VignetteProps } from "../vignette";
-import { useEffect } from "react";
-import { json, useParams } from "react-router-dom";
+import { VignetteProps } from "../vignette";
 import { FecthResult, SearchQueryResult, SearchType } from "../interfaces";
 import TableauVignettes from "../tableauVignette";
-
-
-
-const formatInput = (input: string): string => {
-  // Divisez la chaîne en utilisant "_" comme séparateur
-  const parts = input.split('_');
-
-  // Vérifiez s'il y a au moins deux parties (nom et prénom)
-  if (parts.length >= 2) {
-      // Formatez le nom et le prénom avec la première lettre en majuscule
-      const part1 = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-      const part2 = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
-
-      // Retournez la chaîne formatée
-      return `${part1} ${part2}`;
-  } else {
-      // Si la chaîne ne contient pas au moins deux parties, retournez la chaîne inchangée
-      return input;
-  }
-};
 
 function Search() {
   //var result =JSON.stringify({ });
   const [texteSaisie, setTexteSaisie] = useState<string>();
 
   //Tableau pour stocker les resultats de la query
-  const [queryResult, setQueryResult] =useState<VignetteProps[]>([]);
-  const { name } = useParams<{ name?: string }>();
-  // const formattedInput = formatInput(name || '');
+  const [queryResult, setQueryResult] = useState<VignetteProps[]>([]);
 
-   /** Requete Wikimedia
-     * Les Requetes doivent rendre des attributs aux noms suivant
-     * @id Id vers la page
-     * @imageSrc Url vers l'image
-     * @title Titre de la vignette
-     * @type Type de la vignette passé en paramètre de fetchData
-     * @description Description de la vignette
-     * 
-     */
-   const editionQuery = `
-   SELECT DISTINCT ?id ?title ?image ?description
+  const [loading, setLoading] = useState<boolean>(false);
+
+  /** Requete Wikimedia
+   * Les Requetes doivent rendre des attributs aux noms suivant
+   * @id Id vers la page
+   * @imageSrc Url vers l'image
+   * @title Titre de la vignette
+   * @type Type de la vignette passé en paramètre de fetchData
+   * @description Description de la vignette
+   *
+   */
+  const editionQuery = `
+   SELECT DISTINCT ?id ?title ?imageSrc ?description
    WHERE {
      ?id wdt:P31 wd:Q159821;
                   rdfs:label ?title;
@@ -60,11 +38,11 @@ function Search() {
      FILTER(LANG(?description) = 'fr').
 
      OPTIONAL { ?id wdt:P17 ?pays;}
-     OPTIONAL { ?id wdt:P18 ?image1. }
-     OPTIONAL { ?id wdt:P154 ?image2. }
+     OPTIONAL { ?id wdt:P18 ?image2. }
+     OPTIONAL { ?id wdt:P154 ?image1. }
 
  
-     BIND(COALESCE(?image1, ?image2) AS ?image)
+     BIND(COALESCE(?image1, ?image2) AS ?imageSrc)
    
      SERVICE wikibase:label {
        bd:serviceParam wikibase:language "[LANGUE_DE_VOTRE_CHOIX],fr".
@@ -72,11 +50,11 @@ function Search() {
    }
    `;
 
-   //Fonctionne bien
-   const sportQuery = `
+  //Fonctionne bien
+  const sportQuery = `
    SELECT ?title ?id ?imageSrc ?description
    WHERE {
-     ?id wdt:P31 wd:Q31629;   # Type de sport : tennis
+     ?id wdt:P31 wd:Q31629;
             rdfs:label ?title;
             p:P279 ?subclass_sport;
             schema:description ?description.
@@ -97,7 +75,7 @@ function Search() {
       }
     `;
 
-    const countryQuery = `
+  const countryQuery = `
     SELECT distinct ?id ?title ?description ?imageSrc
     WHERE {
         ?temp wdt:P31 wd:Q26213387;
@@ -122,81 +100,82 @@ function Search() {
     } 
   `;
 
-
   const handleClick = async () => {
+    setLoading(true);
     setQueryResult([]);
-    await fetchData(editionQuery, 'Edition');
-    await fetchData(sportQuery, 'Sport');
-    await fetchData(countryQuery, 'Pays');
+    await fetchData(editionQuery, "Edition");
+    await fetchData(sportQuery, "Sport");
+    await fetchData(countryQuery, "Pays");
+    setLoading(false);
   };
 
-
-  
   const fetchData = async (query: string, typeQuery: SearchType) => {
     const base_endpoint = "https://query.wikidata.org/sparql";
-    
+
     try {
-        const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
-            method: "GET",
-        });
-
-        if (response.ok) {
-            const result:FecthResult = await response.json();
-            const temp: VignetteProps[] = result.results.bindings.map((row) => ({
-              description: row.description.value,
-              id: row.id.value!.substring(row.id.value!.lastIndexOf('/') + 1), 
-              imageSrc: row.imageSrc?.value,
-              title: row.title.value,
-              type: typeQuery,
-            }));
-            setQueryResult((prevQueryResult) => {
-              return [...prevQueryResult, ...temp];
-            });          
-            console.log({ result });
-        } else {
-            console.error("Erreur lors de la requête SPARQL");
+      const response = await fetch(
+        `${base_endpoint}?query=${encodeURIComponent(query)}&format=json`,
+        {
+          method: "GET",
         }
+      );
+
+      if (response.ok) {
+        const result: FecthResult<SearchQueryResult> = await response.json();
+        const temp: VignetteProps[] = result!.results!.bindings.map((row) => ({
+          description: row.description.value,
+          id: row.id.value!.substring(row.id.value!.lastIndexOf("/") + 1),
+          imageSrc: row.imageSrc?.value,
+          title: row.title.value,
+          type: typeQuery,
+        }));
+        setQueryResult((prevQueryResult) => {
+          return [...prevQueryResult, ...temp];
+        });
+        console.log({ result });
+      } else {
+        console.error("Erreur lors de la requête SPARQL");
+      }
     } catch (error) {
-        console.error("Erreur réseau :", error);
+      console.error("Erreur réseau :", error);
     }
-};
+  };
 
-
-
-const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-  setTexteSaisie(event.target.value);
-  
-  
-  
-};
-
-
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setTexteSaisie(event.target.value);
+  };
 
   return (
     <>
-    <div className="global">
-      <br />
-      <div className="search-container">
-        <input
-          type="text"
-          id="search"
-          value={texteSaisie}
-          onChange={handleChange}
-          placeholder="Rechercher..."
-        />
-        <button onClick={handleClick} type="submit" id="search-button">
-          <img
-            src="https://cdn-icons-png.flaticon.com/256/3917/3917132.png"
-            alt="Rechercher"
-          ></img>
-        </button>
+      <div className="global">
+        <br />
+        <div className="search-container">
+          <input
+            type="text"
+            id="search"
+            value={texteSaisie}
+            onChange={handleChange}
+            placeholder="Rechercher..."
+            onKeyDown={(event: React.KeyboardEvent<HTMLInputElement>) => {
+              if (event.key === "Enter") {
+                handleClick();
+              }
+            }}
+          />
+          <button onClick={handleClick} type="submit" id="search-button">
+            <img
+              src="https://cdn-icons-png.flaticon.com/256/3917/3917132.png"
+              alt="Rechercher"
+            ></img>
+          </button>
+        </div>
       </div>
-
-    </div>
-      <TableauVignettes initialVignettes={queryResult} />
+      {
+        loading ? 
+        <div className="loader"></div> :
+        <TableauVignettes initialVignettes={queryResult} />
+      }
     </>
   );
-
-
 }
 export default Search;

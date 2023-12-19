@@ -131,7 +131,6 @@ function Pays() {
 
   return (
     <>
-      <Search />
       <div className='countryInfo'>
           <div className='textCountry'>
             <div className='edition-sports'><h2>Pays : </h2>{countryData[0]?.name.value}</div>

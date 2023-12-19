@@ -1,11 +1,8 @@
 import Search from '../Component/Search';
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import './home.css';
-import TableauVignettes from '../tableauVignette';
-import { VignetteProps } from '../vignette';
 
 function Home() {
-  const [tableData, setTableData] = useState<VignetteProps[]>([]);
   useEffect(() => {
     document.title = "Olymp'IF - Accueil";
   }, []);
