@@ -1,8 +1,8 @@
 
 import { BrowserRouter, Route, Routes} from "react-router-dom";
 import Home from "./pages/home";
-import Vignette from "./vignette";
-import TableauVignettes from './tableauVignette'; // Assurez-vous que le chemin du fichier est correct
+import Vignette from "./Component/vignette";
+import TableauVignettes from './Component/tableauVignette'; // Assurez-vous que le chemin du fichier est correct
 import Athlete from "./pages/athlete/athlete";
 import Sport from "./pages/sport/sport";
 import Pays from "./pages/pays/pays";

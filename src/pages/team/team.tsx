@@ -4,8 +4,8 @@ import { useEffect } from "react";
 
 import './team.css';
 import { FecthResult, SearchQueryResult } from "../../interfaces";
-import TableauVignettes from "../../tableauVignette";
-import { VignetteProps } from "../../vignette";
+import TableauVignettes from "../../Component/tableauVignette";
+import { VignetteProps } from "../../Component/vignette";
 
 
 

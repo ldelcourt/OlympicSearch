@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from "react";
 import "./Search.css";
-import  { VignetteProps } from "../vignette";
+import  { VignetteProps } from "./vignette";
 import { FecthResult, SearchQueryResult, SearchType } from "../interfaces";
-import TableauVignettes from "../tableauVignette";
+import TableauVignettes from "./tableauVignette";
 
 
 function Search() {
