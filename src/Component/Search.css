@@ -19,6 +19,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 15px auto; /* Utilisez auto pour centrer horizontalement */
     justify-content: center;
+    border: 1px solid #ccc;
   }
   .global{
     
@@ -33,7 +34,7 @@
   }
   
   #search-button {
-    background-color: #4285f4;
+    background-color:  #fff;
     border: none;
     border-radius: 0 25px 25px 0;
     cursor: pointer;
@@ -42,6 +43,8 @@
   
   #search-button:hover {
     background-color: #357ae8;
+    
+
   }
   
   #search-button img {

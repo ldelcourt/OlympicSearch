@@ -17,15 +17,22 @@
     justify-content: center;
     flex-wrap: wrap;
     padding: 10px 0; /* Ajoutez un peu d'espace au-dessus et en dessous des options de filtre */
+    
 }
 
   .filter-option {
+    
+    background-color: #fff;
+    border-radius:15px;
     display: inline-block;
     border: 1px solid #ccc;
     padding: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
     margin: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease; /* Ajoute une transition en douceur à l'arrière-plan */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .filter-option:hover {

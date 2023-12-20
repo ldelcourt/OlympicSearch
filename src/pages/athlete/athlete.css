@@ -19,7 +19,7 @@ h6 {
 .containerr {
     display: flex;
     /* Use flexbox */
-    align-items: center;
+    /* align-items: center; */
     justify-content: center;
     margin-left: 70px;
     margin-top: 40px;
@@ -37,7 +37,7 @@ h6 {
     font-weight: normal;
     padding: 10px;
     /* Add these properties to vertically center the text */
-    align-items: center;
+    align-items: left;
     justify-content: center;
     /* Or any height you want */
     line-height: 1.7; /* Add line-height property to increase spacing between lines */
@@ -95,4 +95,19 @@ h6 {
     margin-right: 10px;
     position: relative;
     transform: translateY(8px);
+    transition: transform 0.4s ease-in-out;
+}
+
+.flagg:hover {
+    transform: scale(1.08);
+}
+
+.link{
+    text-decoration: underline;
+    color: black;
+}
+
+.link:hover{
+    color: #FFC000;
+    cursor: pointer;
 }

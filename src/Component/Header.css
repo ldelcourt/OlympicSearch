@@ -8,7 +8,7 @@ header {
     background-color: #0936b3;
     color: #fff;
     padding: 10px;
-    text-align: center;
+    /* text-align: center; */
 }
 
 header img {
@@ -16,7 +16,7 @@ header img {
     height: auto;
     float: left;
     margin: 0px;
-    margin-right: -50%;
+    /* margin-right: -50%; */
     margin-left: 20px;
     margin-top: 6px;
     transition: transform 0.7s ease; /* Add transition property for smooth transform */
@@ -29,7 +29,7 @@ header img:hover {
 header h1 {
     margin: 0;
     line-height: 70px; /* Adjust the line height to vertically center the title */
-    margin-right: 1000px; /* Add auto margin to push the h1 element to the left */
+    margin-left: 5%; /*Add auto margin to push the h1 element to the left */
     font-family: Jockey One;
     font-size: 45px;
     transition: color 0.3s ease; /* Add transition property for smooth color change */
@@ -37,10 +37,33 @@ header h1 {
 }
 
 header h1:hover {
-    color: #bb9001; /* Change the color on hover */
-    cursor: default;
-    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); /* Add text shadow on hover */
+    animation: fadeColor 4s infinite; /* Add animation effect */
+    cursor: pointer;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow on hover */
 }
+
+@keyframes fadeColor {
+    0% {
+        color: rgb(255, 255, 255); /* Start with white color */
+    }
+    20% {
+        color: rgb(255, 217, 0); /* Change to yellow color */
+    }
+    40%{
+        color: rgb(174, 12, 12); /* Start with white color */
+    }
+    60% {
+        color: rgb(38, 0, 255); /* Change to yellow color */
+    }
+    80% {
+        color: rgb(21, 139, 80); /* End with black color */
+    }
+    100% {
+        color: rgb(255, 255, 255); /* End with black color */
+    }
+}
+    
+
     
 
 
