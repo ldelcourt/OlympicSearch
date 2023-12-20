@@ -1,5 +1,4 @@
 import './pays.css';
-import Search from '../../Component/Search';
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 
@@ -85,7 +84,7 @@ function Pays() {
     LIMIT 10
     `;
 
-  const fetchData = async (query:string, setData:React.Dispatch<any>) => {
+  const fetchData = async (query:string, setData:React.Dispatch<any>) => { // eslint-disable-line
     const base_endpoint = "https://query.wikidata.org/sparql";
     try {
       const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {

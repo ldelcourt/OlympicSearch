@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Vignette, { VignetteProps } from './vignette'; 
 import './tableauVignette.css';
 
@@ -9,7 +9,7 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
   const [vignettesData, setVignettesData] = useState<Array<VignetteProps>>([]);
   const [filter, setFilter] = useState<string | null>(null);
 
-  async function fetchWikidataAthlete(id) {
+  async function fetchWikidataAthlete(id: string) {
     const endpointUrl = 'https://query.wikidata.org/sparql';
     const sparqlQuery = `
         SELECT ?titre ?birthdate ?givenName ?familyName ?gender ?birthplace ?birthplaceLabel ?image ?competitions ?competitionsLabel ?birthCountry ?birthCountryLabel
@@ -42,7 +42,7 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
     return await response.json();
   }
 
-  async function fetchOlympicGameData(id) {
+  async function fetchOlympicGameData(id: string) {
     const endpointUrl = 'https://query.wikidata.org/sparql';
     const edition_query = `
     wd:${id} rdfs:label ?edition.
@@ -120,7 +120,7 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
     return await response.json();
   }
 
-  async function fetchWikidataPays(id) {
+  async function fetchWikidataPays(id: string) {
     const endpointUrl = 'https://query.wikidata.org/sparql';
     const sparqlQuery = `
     SELECT DISTINCT ?country ?name ?image WHERE {
@@ -138,7 +138,7 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
     return await response.json();
   }
 
-  async function fetchWikidataSport(id) {
+  async function fetchWikidataSport(id: string) {
     const endpointUrl = 'https://query.wikidata.org/sparql';
     const sportQuery = `
         SELECT ?name ?icon ?description ?pays ?paysLabel
@@ -159,7 +159,7 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
   }
   
 
-  async function createVignetteAthlete(id) {
+  async function createVignetteAthlete(id: string) {
     const data = await fetchWikidataAthlete(id);
     if (data.results.bindings.length > 0) {
         const item = data.results.bindings[0];
@@ -176,7 +176,7 @@ function TableauVignettes({ initialVignettes }: TableauVignettesProps) {
     }
 }
 
-async function createVignetteOlympicGame(id) {
+async function createVignetteOlympicGame(id: string) {
   const data = await fetchOlympicGameData(id);
   if (data.results.bindings.length > 0) {
       const item = data.results.bindings[0];
@@ -193,7 +193,7 @@ async function createVignetteOlympicGame(id) {
   }
 }
 
-async function createVignettePays(id) {
+async function createVignettePays(id: string) {
   const data = await fetchWikidataPays(id);
   if (data.results.bindings.length > 0) {
       const item = data.results.bindings[0];
@@ -210,7 +210,7 @@ async function createVignettePays(id) {
   }
 }
 
-async function createVignetteSport(id) {
+async function createVignetteSport(id: string) {
   const data = await fetchWikidataSport(id);
   if (data.results.bindings.length > 0) {
       const item = data.results.bindings[0];
@@ -279,32 +279,32 @@ async function createVignetteSport(id) {
     init();
   }, [initialVignettes]);
 
-  const addVignette = (newVignette: VignetteProps) => {
-    if (newVignette.type === 'Human') {
-      newVignette.type = 'Athlète';
-    }
+  // const addVignette = (newVignette: VignetteProps) => {
+  //   if (newVignette.type === 'Human') {
+  //     newVignette.type = 'Athlète';
+  //   }
   
-    // Vérifie si une vignette avec le même ID existe déjà
-    const isDuplicate = vignettesData.some(vignette => vignette.id === newVignette.id);
+  //   // Vérifie si une vignette avec le même ID existe déjà
+  //   const isDuplicate = vignettesData.some(vignette => vignette.id === newVignette.id);
   
-    if (!isDuplicate) {
-      setVignettesData(oldVignettesData => [...oldVignettesData, newVignette]);
-      return true; // Ajoute la vignette uniquement si elle n'existe pas déjà
-    } else {
-      console.warn(`La vignette avec l'ID ${newVignette.id} existe déjà.`);
-      return false; // Indique que la vignette n'a pas été ajoutée
-    }
-  };
+  //   if (!isDuplicate) {
+  //     setVignettesData(oldVignettesData => [...oldVignettesData, newVignette]);
+  //     return true; // Ajoute la vignette uniquement si elle n'existe pas déjà
+  //   } else {
+  //     console.warn(`La vignette avec l'ID ${newVignette.id} existe déjà.`);
+  //     return false; // Indique que la vignette n'a pas été ajoutée
+  //   }
+  // };
 
 
-  const removeVignette = (id: string) => {
-    setVignettesData(oldVignettesData => oldVignettesData.filter(vignette => vignette.id !== id));
-  };
+  // const removeVignette = (id: string) => {
+  //   setVignettesData(oldVignettesData => oldVignettesData.filter(vignette => vignette.id !== id));
+  // };
 
-  const resetVignettesData = () => {
-    setVignettesData([]); // Vide vignettesData
-    init(); // Réinitialise vignettesData avec les données initiales
-  };
+  // const resetVignettesData = () => {
+  //   setVignettesData([]); // Vide vignettesData
+  //   init(); // Réinitialise vignettesData avec les données initiales
+  // };
 
   const filteredVignettesData = filter
     ? vignettesData.filter(vignette => vignette.type === filter)

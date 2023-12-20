@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import './Vignette.css';
 import { Link } from 'react-router-dom';
-import { SearchType } from './interfaces';
 
 export interface VignetteProps {
   id?: string;
@@ -13,11 +12,10 @@ export interface VignetteProps {
 
 function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
   const [showDescription, setShowDescription] = useState(false);
-  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   const params = new URLSearchParams();
-  params.append('title', title);
+  params.append('title', title ?? "");
   params.append('type', type);
 
   const getLinkBasedOnType = (): string => {
@@ -36,24 +34,27 @@ function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
   };
 
   const handleMouseEnter = () => {
-    const timerId = setTimeout(() => setShowDescription(true), 500);
-    setTimer(timerId);
+    // Utilisation de la Promise et setTimeout
+    const timerPromise = new Promise<void>(resolve => {
+      setTimeout(() => {
+        resolve();
+        setShowDescription(true);
+      }, 500);
+    });
+
+    // Mise à jour de l'état avec la résolution de la Promise
+    timerPromise.then(() => {
+      // Faites quelque chose après le délai si nécessaire
+    });
   };
 
   const handleMouseLeave = () => {
-    if (timer) clearTimeout(timer);
     setShowDescription(false);
   };
 
   const handleMouseMove = (event: React.MouseEvent) => {
     setCursorPosition({ x: event.clientX, y: event.clientY });
   };
-
-  useEffect(() => {
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [timer]);
 
   return (
     <Link to={getLinkBasedOnType()} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} onMouseMove={handleMouseMove}>

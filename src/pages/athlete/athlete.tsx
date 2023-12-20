@@ -4,7 +4,6 @@ import { useEffect } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 import './athlete.css';
-import { FecthResult, QueryValue } from "../../interfaces";
 
 
 /*
@@ -26,11 +25,10 @@ const formatNomPrenom = (nomPrenom: string): string => {
     }
 };*/
 
-let test = 0;
 
-const CountGoldMedals = (athleteData: any) => {
+const CountGoldMedals = (athleteData: any) => { // eslint-disable-line
     let count = 0;
-    athleteData?.results?.bindings.map((binding: any, i: number) => {
+    athleteData?.results?.bindings.map((binding: any) => { // eslint-disable-line
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -43,9 +41,9 @@ const CountGoldMedals = (athleteData: any) => {
     return count;
 }
 
-const CountSilverMedals = (athleteData: any) => {
+const CountSilverMedals = (athleteData: any) => { // eslint-disable-line
     let count = 0;
-    athleteData?.results?.bindings.map((binding: any, i: number) => {
+    athleteData?.results?.bindings.map((binding: any) => { // eslint-disable-line
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -58,9 +56,9 @@ const CountSilverMedals = (athleteData: any) => {
     return count;
 }
 
-const CountBronzeMedals = (athleteData: any) => {
+const CountBronzeMedals = (athleteData: any) => { // eslint-disable-line
     let count = 0;
-    athleteData?.results?.bindings.map((binding: any, i: number) => {
+    athleteData?.results?.bindings.map((binding: any) => { // eslint-disable-line
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -73,17 +71,10 @@ const CountBronzeMedals = (athleteData: any) => {
     return count;
 }
 
-interface CountryQueryResult {
-    id: QueryValue;
-    name: QueryValue;
-}
-
 function Athlete() {
-    const [texteSaisie, setTexteSaisie] = useState<string>();
     const naviguate = useNavigate();
     const { idParam } = useParams<{ idParam: string }>(); // Récupère l'identifiant de l'athlète dans l'URL
-    const [athleteData, setAthleteData] = useState<any>();
-    const [countryData, setCountryData] = useState<FecthResult<CountryQueryResult>>();
+    const [athleteData, setAthleteData] = useState<any>(); // eslint-disable-line
 
 
     const fetchData = async () => {
@@ -132,32 +123,6 @@ function Athlete() {
             } 
         }        
         `;
-
-        const countryQuery = `
-        SELECT distinct ?id ?title ?description ?imageSrc
-        WHERE {
-            ?temp wdt:P31 wd:Q26213387;
-                wdt:P17 ?country;
-                rdfs:label ?pageName;
-                wdt:P179 ?id.
-               
-            
-            FILTER(
-              LANG(?pageName) = 'fr' && 
-              CONTAINS(?pageName, "France" )  
-            ).
-        
-        OPTIONAL { ?country schema:description ?description }
-        OPTIONAL { ?country wdt:P41 ?imageSrc }
-        OPTIONAL { ?country rdfs:label ?title }
-        FILTER(lang(?description) = 'fr' && LANG(?title) = "fr")
-    
-        SERVICE wikibase:label {
-          bd:serviceParam wikibase:language "fr".
-          }
-        } 
-      `;
-
 
         try {
             const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
@@ -241,7 +206,7 @@ function Athlete() {
                     {CountBronzeMedals(athleteData)} <img className="medaillee" src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Bronze_medal_olympic.svg/330px-Bronze_medal_olympic.svg.png" alt="Bronze Medal" />
                 </strong>
                 
-                {athleteData?.results?.bindings.map((binding: any, i: number) => {
+                {athleteData?.results?.bindings.map((binding: any, i: number) => { //eslint-disable-line
                     const competitionLabel = binding.competitionsLabel?.value;
                     const competition = binding.competitions?.value;
                     const medalsLabel = binding.medalsLabel?.value;
@@ -252,7 +217,7 @@ function Athlete() {
                     const instanceOfEditionLabel = binding.instanceOfEditionLabel?.value;
                     const instanceOfFurtherEditionLabel = binding.instanceOfFurtherEditionLabel?.value;
                     const epreuveLabel = binding.epreuveLabel?.value;
-                    const awardLabel = binding.awardLabel?.value;
+                    // const awardLabel = binding.awardLabel?.value;
                     if (competitionLabel && competitionLabel.toLowerCase().includes("olymp")) {
                         return (
                             <p key={i}>

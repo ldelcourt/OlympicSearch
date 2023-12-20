@@ -61,11 +61,11 @@ function Sport() {
             `;
         
 
-    const fetchData = async (query: string, setData: React.Dispatch<any> ) => {
+    const fetchData = async (query: string, setData: React.Dispatch<any> ) => { // eslint-disable-line
         const base_endpoint = "https://query.wikidata.org/sparql";
         
 
-
+        setLoading(true);
         try {
             const response = await fetch(`${base_endpoint}?query=${encodeURIComponent(query)}&format=json`, {
                 method: "GET",
@@ -80,6 +80,8 @@ function Sport() {
             }
         } catch (error) {
             console.error("Erreur réseau :", error);
+        } finally{
+            setLoading(false);
         }
 
     };

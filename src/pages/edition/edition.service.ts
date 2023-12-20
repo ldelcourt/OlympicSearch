@@ -16,6 +16,7 @@ export type Ranking = {
   bronze: number;
   silver: number;
   gold: number;
+  [key: string]: number | string
 };
 
 export const fetchEditionData = async (
