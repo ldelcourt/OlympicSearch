@@ -240,10 +240,13 @@ async function createVignetteSport(id: string) {
         //{ imageSrc: 'https://th.bing.com/th/id/OIP.X287QnzDv7AT_1SLpnpb2QHaE8?rs=1&pid=ImgDetMain' , title: 'athlétisme', type: 'Sport', id :'Q542', description : 'Voir l historique de l athètisme au JO'},
         //{ imageSrc: 'https://th.bing.com/th/id/OIP.GBa4nRMzIMsdiAKFze3MoAHaF7?rs=1&pid=ImgDetMain' , title: 'basket en fauteuil', type: 'Sport', id :'Q1128216', description : 'Voir l historique du basket fauteuil au JO'},
         await createVignetteAthlete('Q3195752'), // Michael Phelps
+        await createVignetteOlympicGame('Q8613'), 
         await createVignetteAthlete('Q1189'), 
         await createVignetteAthlete('Q45659'), 
+        await createVignettePays('Q756940'),
         await createVignetteAthlete('Q137575'), // Florent Manaudou
         await createVignetteAthlete('Q7520267'), // Simone Biles
+        await createVignetteOlympicGame('Q8577'), 
         await createVignetteAthlete('Q134709'), // Thierry Omeyer
         await createVignetteAthlete('Q157809'), // Nikola Karabatic
         await createVignettePays('Q742512'), // France
@@ -251,12 +254,11 @@ async function createVignetteSport(id: string) {
         await createVignetteAthlete('Q705966'),
         await createVignetteAthlete('Q1652'), 
         await createVignetteSport('Q847'), 
+        //await createVignettePays('Q727511'),
         await createVignetteSport('Q542'),  
         await createVignetteSport('Q1128216'), 
         await createVignetteOlympicGame('Q995653'), 
         await createVignetteOlympicGame('Q181278'), 
-        await createVignetteOlympicGame('Q8613'), 
-        await createVignetteOlympicGame('Q8577'), 
         await createVignetteOlympicGame('Q8567'), 
         await createVignetteAthlete('Q39562'), 
         await createVignetteAthlete('Q22102'), 
@@ -265,6 +267,7 @@ async function createVignetteSport(id: string) {
         await createVignetteAthlete('Q189408'),
         await createVignetteAthlete('Q177969'),
         await createVignetteSport('Q43450'),
+        //await createVignettePays('Q1576072'),
         //await createVignettePays('Q742661'),
 
     ];
