@@ -187,7 +187,7 @@ function Athlete() {
                                     }
                                 </span>
                     <br />
-                    <strong>Taille :</strong> {athleteData?.results?.bindings[0]?.height?.value} m  
+                    <strong>Taille :</strong> {athleteData?.results?.bindings[0]?.height?.value && <span>{athleteData?.results?.bindings[0]?.height?.value} cm</span>} {!athleteData?.results?.bindings[0]?.height?.value && <span>inconnue</span>}
                     {athleteData?.results?.bindings[0]?.weight?.value && <span><strong>  Poids :</strong> {athleteData?.results?.bindings[0]?.weight?.value} kg</span>}
                     {!athleteData?.results?.bindings[0]?.weight?.value && <span><strong>  Poids :</strong> inconnu </span>}
 

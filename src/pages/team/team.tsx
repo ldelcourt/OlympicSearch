@@ -1,9 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-
-
 import './team.css';
-import { FecthResult, SearchQueryResult } from "../../interfaces";
 import TableauVignettes from "../../Component/tableauVignette";
 import { VignetteProps } from "../../Component/vignette";
 
@@ -59,7 +54,15 @@ function Team() {
         type: 'Athlète',
     };
     
-    const teamData: VignetteProps[]  = [thibautChantrel, gregoireMuller, louDelcourt, meijePigeonnat, jadeLeroux, sarahPignol]
+    const armandDemasson : VignetteProps = {
+        description: "Etudiant en 4ème annèe au sein du département de l'INSA Lyon",
+        id: "Q123925969",
+        imageSrc: "http://commons.wikimedia.org/wiki/Special:FilePath/Photo%20cv%20carr%C3%A9.png",
+        title: "Armand Demasson (4IF)",
+        type: 'Athlète',
+
+    };
+    const teamData: VignetteProps[]  = [thibautChantrel, gregoireMuller, louDelcourt, meijePigeonnat, jadeLeroux, sarahPignol, armandDemasson];
     
     return (
         <div className="sport-container">
