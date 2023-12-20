@@ -158,7 +158,7 @@ export const fetchEditionData = async (
 
 export const fetchSports = async (
   edition?: string
-): Promise<string[] | undefined> => {
+): Promise<{id: string, name: string}[] | undefined> => {
   const base_endpoint = "https://query.wikidata.org/sparql";
 
   const query = `
@@ -183,7 +183,7 @@ export const fetchSports = async (
     if (response.ok) {
       const res = await response.json();
       if (res.results.bindings?.length) {
-        const data: string[] = res.results.bindings.map((res: any) => {
+        const data: {id: string, name: string}[] = res.results.bindings.map((res: any) => { // eslint-disable-line
           return ( {
             name : 
             res.sport_label.value.charAt(0).toUpperCase() +
@@ -192,7 +192,6 @@ export const fetchSports = async (
           }
           );
         });
-        console.log(data);
         return data;
       }
     } else {
@@ -205,7 +204,7 @@ export const fetchSports = async (
 
 export const fetchEditionsLink = async (
   edition?: string
-): Promise<any | undefined> => {
+): Promise<any | undefined> => { // eslint-disable-line
   const base_endpoint = "https://query.wikidata.org/sparql";
 
   const query = `
@@ -289,7 +288,7 @@ export const fetchRanking = async (
     if (response.ok) {
       const res = await response.json();
       if (res.results.bindings?.length) {
-        const data = res.results.bindings.map((result: any) => {
+        const data = res.results.bindings.map((result: any) => { // eslint-disable-line
           return {
             country: result?.country_name?.value,
             bronze: +(result?.bronze_medals?.value ?? 0),

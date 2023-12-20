@@ -75,8 +75,9 @@ const Edition = () => {
         return currentFilter === 'total' ? totalA - totalB : totalB - totalA ;
       });
     } else {
-      if (typeof ranking[0][column] === "number") {
-        sortRanking = ranking.sort((a, b) => currentFilter == column ? a[column] - b[column] : b[column] - a[column]);
+      // eslint-disable-next-lines
+      if (typeof ranking[0][column] === "number") { 
+        sortRanking = ranking.sort((a, b) => currentFilter == column ? a[column] - b[column] : b[column] - a[column]); 
       } else {
         sortRanking = ranking.sort((a, b) => {
           const valueA = a[column].toLowerCase();
