@@ -1,0 +1,130 @@
+
+.sport-container h1{
+  font-size: 48px;
+  text-align: center;
+}
+.sport-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: column;
+  margin: 20px 0; 
+  gap: 20px;
+
+}
+
+.sport-hero {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  width: 100vw;
+  margin: auto;
+
+  img{
+    width: calc(211px * 1.8);
+    height: 211px;
+    padding: 0 12px;
+    margin: 0;
+  }
+}
+
+.sport-information {
+  background-color: #FFFFFF;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px  16px;
+  border-radius: 8px;
+  height: fit-content 
+}
+
+.sport-line {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+  font-size: 18px;
+  width: fit-content;
+
+  h2{
+    font-size: 20px;
+    margin: 0;
+  }
+}
+
+.p {
+    box-sizing: border-box;
+    /* Include padding and border in element's total width */
+    background: #F5F5F5;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);    width: 900px;
+    /* Adjust the value as needed */
+    font-size: 25px;
+    padding: 10px;
+    /* Add these properties to vertically center the text */
+    /*display: flex;*/
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    /* Or any height you want */
+}
+
+.image img {
+    height: 200px;
+    width: auto;
+    margin-left: 80px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.image img:hover {
+    transform: scale(1.1);
+}
+
+.description {
+    box-sizing: border-box;
+    background: #F5F5F5;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);    width: 900px;
+    width: 80%;
+    margin: 70px;
+    font-size: 25px;
+    padding: 10px;
+
+}
+
+  
+  .sport-athletes{
+    background-color: #FFF;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    margin: auto;
+    padding: 16px  16px;    
+    border-radius: 8px;
+    height: fit-content;
+    width: calc(211px * 1.8 + 432px);
+  }
+  
+  .sport-athletes h2{
+    font-size: 20px;
+    margin: 0;
+  }
+  
+  .sport-athletes ul{
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+  }
+  
+  .sport-athletes li{
+    font-size: 18px;
+    letter-spacing: 0.05rem;
+  }
+  
+  .sport-athletes li:last-child span{
+    display: none;
+  }

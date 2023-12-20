@@ -56,10 +56,9 @@ function Pays() {
 
     const countryQuery = `
     SELECT DISTINCT ?country ?name ?image WHERE {
-      ?pays_edition wdt:P179 wd:${idPays}.
-      ?pays_edition wdt:P17 ?country.
-      ?country wdt:P1813 ?name.
-      ?country wdt:P41 ?image.
+      wd:${idPays} wdt:P17 ?country.
+      ?country wdt:P41 ?image;
+                rdfs:label ?name.
       FILTER(lang(?name) = 'fr')
     }
     `;

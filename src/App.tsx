@@ -6,6 +6,7 @@ import TableauVignettes from './tableauVignette'; // Assurez-vous que le chemin 
 import Athlete from "./pages/athlete/athlete";
 import Sport from "./pages/sport/sport";
 import Pays from "./pages/pays/pays";
+import Team from "./pages/team/team";
 
 import Edition from "./pages/edition/edition";
 import Header from "./Component/Header";
@@ -23,6 +24,7 @@ function App() {
         <Route path="/athlete/:idParam" Component={Athlete} />
         <Route path="/sport/:idSport" Component={Sport} />
         <Route path="/pays/:idPays" Component={Pays} />
+        <Route path='team' Component={Team} />
       </Routes>
     </BrowserRouter>
   );

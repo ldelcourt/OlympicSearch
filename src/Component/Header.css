@@ -42,6 +42,25 @@ header h1:hover {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow on hover */
 }
 
+.header-right {
+    float: right;
+    margin-right: 5%;
+    margin-top: 20px;
+}
+
+.linkk {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+.linkk:hover {
+    color: #ffe600;
+    pointer: cursor;
+    text-decoration: underline;
+}
+
 @keyframes fadeColor {
     0% {
         color: rgb(255, 255, 255); /* Start with white color */
