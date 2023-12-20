@@ -75,12 +75,12 @@ const Edition = () => {
         return currentFilter === 'total' ? totalA - totalB : totalB - totalA ;
       });
     } else {
-      if (typeof ranking[0][column] === "number") {
-        sortRanking = ranking.sort((a, b) => currentFilter == column ? a[column] - b[column] : b[column] - a[column]);
+      if (typeof ranking[0][column] === "number") { 
+        sortRanking = ranking.sort((a, b) => currentFilter == column ? (a[column] as number) - (b[column] as number) : (b[column] as number) - (a[column] as number)); 
       } else {
         sortRanking = ranking.sort((a, b) => {
-          const valueA = a[column].toLowerCase();
-          const valueB = b[column].toLowerCase();
+          const valueA = (a[column] as string).toLowerCase();
+          const valueB = (b[column] as string).toLowerCase();
           if (valueA > valueB) {
             return currentFilter === "country" ? -1 : 1;
           }
