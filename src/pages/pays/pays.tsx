@@ -106,7 +106,7 @@ function Pays() {
 
   const MedalTableRow: React.FC<{infos: QueryMedal}> = ({ infos }) => (
       <tr>
-        <td className='hoverable' onClick={() => {naviguate(`/edition/${infos.olympicEdition.value.substring(infos.olympicEdition.value.lastIndexOf('/') + 1)}`)}}><a>{infos.label.value.match(/\b\d{4}\b/)}</a></td>
+        <td className='link' onClick={() => {naviguate(`/edition/${infos.olympicEdition.value.substring(infos.olympicEdition.value.lastIndexOf('/') + 1)}`)}}><a>{infos.label.value.match(/\b\d{4}\b/)}</a></td>
         <td>{infos.totalGold.value}</td>
         <td>{infos.totalSilver.value}</td>
         <td>{infos.totalBronze.value}</td>
@@ -114,7 +114,7 @@ function Pays() {
   );
 
   const AthleteRow: React.FC<{data: QueryAthlete}> = ({ data }) => (
-    <li className='hoverable' onClick={() => naviguate(`/athlete/${data.sportif.value.substring(data.sportif.value.lastIndexOf('/') + 1)}`)}>
+    <li className='link' onClick={() => naviguate(`/athlete/${data.sportif.value.substring(data.sportif.value.lastIndexOf('/') + 1)}`)}>
       {data?.name?.value}<span> - </span>
     </li>
   );
