@@ -6,29 +6,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import './athlete.css';
 
 
-/*
-const formatNomPrenom = (nomPrenom: string): string => {
-    // Divisez la chaîne en utilisant "_" comme séparateur
-    const parts = nomPrenom.split('_');
-
-    // Vérifiez s'il y a au moins deux parties (nom et prénom)
-    if (parts.length >= 2) {
-        // Formatez le nom et le prénom avec la première lettre en majuscule
-        const nom = parts[0].charAt(0).toUpperCase() + parts[0].slice(1);
-        const prenom = parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
-
-        // Retournez la chaîne formatée
-        return `${nom} ${prenom}`;
-    } else {
-        // Si la chaîne ne contient pas au moins deux parties, retournez la chaîne inchangée
-        return nomPrenom;
-    }
-};*/
-
-
-const CountGoldMedals = (athleteData: any) => { // eslint-disable-line
+const CountGoldMedals = (athleteData: any) => { 
     let count = 0;
-    athleteData?.results?.bindings.map((binding: any) => { // eslint-disable-line
+    athleteData?.results?.bindings.map((binding: any) => { 
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -41,9 +21,9 @@ const CountGoldMedals = (athleteData: any) => { // eslint-disable-line
     return count;
 }
 
-const CountSilverMedals = (athleteData: any) => { // eslint-disable-line
+const CountSilverMedals = (athleteData: any) => { 
     let count = 0;
-    athleteData?.results?.bindings.map((binding: any) => { // eslint-disable-line
+    athleteData?.results?.bindings.map((binding: any) => { 
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -56,9 +36,9 @@ const CountSilverMedals = (athleteData: any) => { // eslint-disable-line
     return count;
 }
 
-const CountBronzeMedals = (athleteData: any) => { // eslint-disable-line
+const CountBronzeMedals = (athleteData: any) => { 
     let count = 0;
-    athleteData?.results?.bindings.map((binding: any) => { // eslint-disable-line
+    athleteData?.results?.bindings.map((binding: any) => { 
         const competitionLabel = binding.competitionsLabel?.value;
         const medalsLabel = binding.medalsLabel?.value;
         const rankingLabel = binding.ranking?.value;
@@ -74,7 +54,7 @@ const CountBronzeMedals = (athleteData: any) => { // eslint-disable-line
 function Athlete() {
     const naviguate = useNavigate();
     const { idParam } = useParams<{ idParam: string }>(); // Récupère l'identifiant de l'athlète dans l'URL
-    const [athleteData, setAthleteData] = useState<any>(); // eslint-disable-line
+    const [athleteData, setAthleteData] = useState<any>(); 
 
 
     const fetchData = async () => {

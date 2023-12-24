@@ -44,7 +44,6 @@ function Vignette({ id, imageSrc, title, type, description }: VignetteProps) {
 
     // Mise à jour de l'état avec la résolution de la Promise
     timerPromise.then(() => {
-      // Faites quelque chose après le délai si nécessaire
     });
   };
 

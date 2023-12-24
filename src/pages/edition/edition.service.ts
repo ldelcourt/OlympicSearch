@@ -205,7 +205,7 @@ export const fetchSports = async (
 
 export const fetchEditionsLink = async (
   edition?: string
-): Promise<any | undefined> => { // eslint-disable-line
+): Promise<any | undefined> => { 
   const base_endpoint = "https://query.wikidata.org/sparql";
 
   const query = `
@@ -289,7 +289,7 @@ export const fetchRanking = async (
     if (response.ok) {
       const res = await response.json();
       if (res.results.bindings?.length) {
-        const data = res.results.bindings.map((result: any) => { // eslint-disable-line
+        const data = res.results.bindings.map((result: any) => { 
           return {
             country: result?.country_name?.value,
             bronze: +(result?.bronze_medals?.value ?? 0),

@@ -3,20 +3,20 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 5px;
-    width: 80%; /* Ajustez cette valeur pour changer la largeur du tableau */
-    margin: 0 auto; /* Centrer le tableau sur la page */
+    width: 80%; 
+    margin: 0 auto; 
 }
   
   .vignette-container {
-    flex-basis: calc(50% - 10px); /* Ajustez la valeur de 10px en fonction de l'espace que vous voulez entre les vignettes */
-    box-sizing: border-box; /* Assurez-vous que la largeur inclut le padding et la bordure */
+    flex-basis: calc(50% - 10px); 
+    box-sizing: border-box; 
   }
   
   .filter-container {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 10px 0; /* Ajoutez un peu d'espace au-dessus et en dessous des options de filtre */
+    padding: 10px 0;
     
 }
 
@@ -31,7 +31,7 @@
     padding-top: 5px;
     margin: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Ajoute une transition en douceur à l'arrière-plan */
+    transition: background-color 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   

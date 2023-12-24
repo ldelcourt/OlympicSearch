@@ -55,18 +55,13 @@
 
 .p {
     box-sizing: border-box;
-    /* Include padding and border in element's total width */
     background: #F5F5F5;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);    width: 900px;
-    /* Adjust the value as needed */
     font-size: 25px;
     padding: 10px;
-    /* Add these properties to vertically center the text */
-    /*display: flex;*/
     align-items: center;
     justify-content: center;
     height: 300px;
-    /* Or any height you want */
 }
 
 .image img {

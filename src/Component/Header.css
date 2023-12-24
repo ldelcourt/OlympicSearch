@@ -19,27 +19,27 @@ header img {
     /* margin-right: -50%; */
     margin-left: 20px;
     margin-top: 6px;
-    transition: transform 0.7s ease; /* Add transition property for smooth transform */
+    transition: transform 0.7s ease; 
 }
 
 header img:hover {
-    transform: scale(0.8) rotate(360deg); /* Rotate the image 360 degrees on hover */
+    transform: scale(0.8) rotate(360deg); 
 }
 
 header h1 {
     margin: 0;
-    line-height: 70px; /* Adjust the line height to vertically center the title */
-    margin-left: 5%; /*Add auto margin to push the h1 element to the left */
+    line-height: 70px; 
+    margin-left: 5%; 
     font-family: Jockey One;
     font-size: 45px;
-    transition: color 0.3s ease; /* Add transition property for smooth color change */
-    display: inline-block; /* Make the h1 element as wide as the text */
+    transition: color 0.3s ease; /* Faire une transition de couleur */
+    display: inline-block; 
 }
 
 header h1:hover {
-    animation: fadeColor 4s infinite; /* Add animation effect */
+    animation: fadeColor 4s infinite; /* Ajouter de l'animation */
     cursor: pointer;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add text shadow on hover */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
 }
 
 .header-right {
